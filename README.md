@@ -20,9 +20,9 @@ ReLAx is an object oriented library for deep reinforcement learning built on top
 
 <!-- tocstop -->
 
-## Header1
+## Implemented Algorithms
 
-## Header2
+## Special Features
 
-## Header3
+## Minimal Examples
 
