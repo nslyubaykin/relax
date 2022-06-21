@@ -17,11 +17,11 @@ Relax is an object oriented library for deep reinforcement learning built on top
 
 <!-- tocstop -->
 
-##Header1
+## Header1
 
-##Header2
+## Header2
 
-##Header3
+## Header3
 
 
 - [More About PyTorch](#more-about-pytorch)
