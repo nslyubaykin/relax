@@ -6,14 +6,14 @@ Relax is an object oriented library for deep reinforcement learning built on top
 <!-- toc -->
 
 - [Header1](#header1)
-- [Header2](#header1)
-- [Header3](#header1)
-- [Header4](#header1)
-- [Header5](#header1)
-- [Header6](#header1)
-- [Header7](#header1)
-- [Header8](#header1)
-- [Header9](#header1)
+- [Header2](#header2)
+- [Header3](#header3)
+- [Header4](#header4)
+- [Header5](#header5)
+- [Header6](#header6)
+- [Header7](#header7)
+- [Header8](#header8)
+- [Header9](#header9)
 
 <!-- tocstop -->
 
