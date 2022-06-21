@@ -8,9 +8,9 @@ ReLAx is an object oriented library for deep reinforcement learning built on top
 - [Implemented Algorithms](#implemented-algorithms)
 - [Special Features](#special-features)
 - [Minimal Examples](#minimal-examples)
-  - [On-Policy (PPO)](#on-policy-(ppo))
-  - [Off-policy (DQN)](#off-policy-(dqn))
-- [Usage With Custom Environments](#usage-with-custom-envirionments)
+  - [On Policy](#on-policy)
+  - [Off policy](#off-policy)
+- [Usage With Custom Environments](#usage-with-custom-environments)
 - [Installation](#installation)
   - [Building from GitHub Source](#building-from-github-source)
   - [Mujoco](#mujoco)
@@ -29,7 +29,7 @@ ReLAx library contains implementations of the following algorithms:
     - TRPO
     - PPO
   - Off-policy
-    - DQN
+    - DQN 
     - Double DQN
     - Dueling DQN
     - Noisy DQN
@@ -64,3 +64,60 @@ And other options for building non-standard RL architectures:
 
 ## Minimal Examples
 
+### On Policy
+
+```python
+# PPO 
+pass
+```
+
+### Off policy
+
+```python
+# DQN
+pass
+```
+
+## Usage With Custom Environments
+Some examples how to use ReLAx with user defined envirionments:
+
+  - Playing 2048 with RAINBOW
+
+## Installation
+
+### Building from GitHub Source
+
+```.bash
+conda create -n relax python=3.6
+source activate relax
+pip install -e .
+```
+
+### Mujoco
+
+```.bash
+```
+
+### Atari Environments
+
+```.bash
+```
+
+## Further Developments
+In the future the following functionality is planned to be added:
+
+ - Curiosity (RND)
+ - Offline RL (BEAR, BCQ)
+ - Decision Transformers
+ - QR-DQN
+ - IQN
+ - Discrete SAC
+ - NAF
+ - Stochastic envirionment models
+ - Improving documentation
+
+## Known Issues
+
+  - Lack of documentation
+  - Filtering Reward Weigthed Refinement declared performance in paper is not yet reached
+  - DYNA-Q is not campatible with PER as it is not clear which priority to assign to synthetic branched transitions
