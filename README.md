@@ -68,8 +68,48 @@ And other options for building non-standard RL architectures:
 ### On Policy
 
 ```python
-# PPO 
-pass
+import torch
+import gym
+
+from relax.rl.actors import VPG
+from relax.zoo.policies import CategoricalMLP
+from relax.data.sampling import Sampler
+
+# Create treining and eval envsv
+env = gym.make("CartPole-v1")
+eval_env = gym.make("CartPole-v1")
+
+# Wrap them into Sampler
+sampler = Sampler(env)
+eval_sampler = Sampler(eval_env)
+
+# Define Vanilla Policy Gradient actor
+actor = VPG(
+    device=torch.device('cuda'), # torch.device('cpu') if no gpu available
+    policy_net=CategoricalMLP(acs_dim=2, obs_dim=4,
+                              nlayers=2, nunits=64),
+    learning_rate=0.01
+)
+
+# Run training loop:
+for i in range(100):
+    
+    # sample training data
+    train_batch = sampler.sample(n_transitions=1000,
+                                 actor=actor,
+                                 train_sampling=True)
+    
+    # Update VPG actor
+    actor.update(train_batch)
+    
+    # Collect evaluation episodes
+    eval_batch = eval_sampler.sample_n_episodes(n_episodes=5,
+                                                actor=actor,
+                                                train_sampling=False)
+    
+    # Print average return per iteration
+    print(f"Iter: {i}, eval score: {eval_batch.create_logs()['avg_return']}")
+    
 ```
 
 ### Off policy
