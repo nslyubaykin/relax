@@ -88,9 +88,13 @@ Some examples how to use ReLAx with user defined envirionments:
 
 ### Building from GitHub Source
 
+Installing into a separate virtual environment:
 ```.bash
+git clone https://github.com/nslyubaykin/relax
+cd relax
 conda create -n relax python=3.6
 source activate relax
+pip install -r requirements.txt
 pip install -e .
 ```
 
