@@ -75,7 +75,7 @@ from relax.rl.actors import VPG
 from relax.zoo.policies import CategoricalMLP
 from relax.data.sampling import Sampler
 
-# Create treining and eval envsv
+# Create training and eval envs
 env = gym.make("CartPole-v1")
 eval_env = gym.make("CartPole-v1")
 
