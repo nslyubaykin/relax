@@ -121,11 +121,11 @@ import gym
 from relax.rl.actors import ArgmaxQValue
 from relax.rl.critics import DQN
 
-From relax.exploration import EpsilonGreedy
+from relax.exploration import EpsilonGreedy
 from relax.schedules import PiecewiseSchedule
 from relax.zoo.critics import DiscQMLP
 
-from relax.data.samplimg import Sampler
+from relax.data.sampling import Sampler
 from relax.data.replay_buffer import ReplayBuffer
 
 # Create training and eval envs
@@ -137,22 +137,23 @@ sampler = Sampler(env)
 eval_sampler = Sampler(eval_env)
 
 # Define schedules
-# First 10k no learning - only random sampling
-lr_schedule = PiecewiseSchedule()
-eps_schedule = PiecewiseSchedule()
+# First 5k no learning - only random sampling
+lr_schedule = PiecewiseSchedule({0: 5000}, 5e-5)
+eps_schedule = PiecewiseSchedule({1: 5000}, 1e-3)
 
 # Define actor
 actor = ArgmaxQValue(
-  exploration=EpsilonGreedy(eps=eps_schedule)
+    exploration=EpsilonGreedy(eps=eps_schedule)
 )
 
 # Define critic
 critic = DQN(
-    device=torch.device('cuda'),
+    device=torch.device('cuda'), # torch.device('cpu') if no gpu available
     critic_net=DiscQMLP(obs_dim=4, acs_dim=2, 
                         nlayers=2, nunits=64),
     learning_rate=lr_schedule,
-    batch_size=100
+    batch_size=100,
+    target_updates_freq=3000
 )
 
 # Provide actor with critic
@@ -185,10 +186,10 @@ for i in range(100000):
                                                   train_sampling=False)
 
       # Print average return per iteration
-      print(f"Iter: {i}, eval score: "
-            f"{eval_batch.create_logs()['avg_return']}, "
-            "buffer score: "
-            f"{replay_buffer.create_logs()['avg_return']")
+      print(f"Iter: {i}, eval score: " + \
+            f"{eval_batch.create_logs()['avg_return']}, " + \
+            "buffer score: " + \
+            f"{replay_buffer.create_logs()['avg_return']}")
 ```
 
 ## Usage With Custom Environments
