@@ -115,8 +115,39 @@ for i in range(100):
 ### Off policy
 
 ```python
-# DQN
-pass
+import torch
+import gym
+
+from relax.rl.actors import ArgmaxQValue
+from relax.rl.critics import DQN
+
+From relax.exploration import EpsilonGreedy
+from relax.schedules import PiecewiseSchedule
+
+from relax.data.samplimg import Sampler
+from relax.data.replay_buffer import ReplayBuffer
+
+# Create training and eval envs
+env = gym.make("CartPole-v1")
+eval_env = gym.make("CartPole-v1")
+
+# Wrap them into Sampler
+sampler = Sampler(env)
+eval_sampler = Sampler(eval_env)
+
+# Define schedules
+# First 10k no learning - only random sampling
+lr_schedule = PiecewiseSchedule()
+eps_scheduke = PiecewiseSchedule()
+
+# Define actor
+actor = ArgmaxQValue(eps=eps_schedule)
+
+# Define critic
+critic = DQN(
+    device=torch.device('cuda')
+)
+
 ```
 
 ## Usage With Custom Environments
