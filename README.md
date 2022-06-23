@@ -94,7 +94,7 @@ actor = VPG(
 # Run training loop:
 for i in range(100):
     
-    # sample training data
+    # Sample training data
     train_batch = sampler.sample(n_transitions=1000,
                                  actor=actor,
                                  train_sampling=True)
