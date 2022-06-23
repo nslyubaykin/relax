@@ -123,6 +123,7 @@ from relax.rl.critics import DQN
 
 From relax.exploration import EpsilonGreedy
 from relax.schedules import PiecewiseSchedule
+from relax.zoo.critics import DiscQMLP
 
 from relax.data.samplimg import Sampler
 from relax.data.replay_buffer import ReplayBuffer
@@ -138,16 +139,56 @@ eval_sampler = Sampler(eval_env)
 # Define schedules
 # First 10k no learning - only random sampling
 lr_schedule = PiecewiseSchedule()
-eps_scheduke = PiecewiseSchedule()
+eps_schedule = PiecewiseSchedule()
 
 # Define actor
-actor = ArgmaxQValue(eps=eps_schedule)
+actor = ArgmaxQValue(
+  exploration=EpsilonGreedy(eps=eps_schedule)
+)
 
 # Define critic
 critic = DQN(
-    device=torch.device('cuda')
+    device=torch.device('cuda'),
+    critic_net=DiscQMLP(obs_dim=4, acs_dim=2, 
+                        nlayers=2, nunits=64),
+    learning_rate=lr_schedule,
+    batch_size=100
 )
 
+# Provide actor with critic
+actor.set_critic(critic)
+
+# Run q-iteration training loop:
+print_every = 1000
+replay_buffer = ReplayBuffer(100000)
+
+for i in range(100000):
+    
+    # Sample training data (one transition)
+    train_batch = sampler.sample(n_transitions=1,
+                                 actor=actor,
+                                 train_sampling=True)
+                                 
+    # Add it to buffer                             
+    replay_buffer.add_paths(train_batch)
+    
+    # Update DQN critic
+    critic.update(replay_buffer)
+    
+    # Update ArgmaxQValue actor (only to step schedules)
+    actor.update()
+    
+    if i > 0 and i % print_every == 0:
+      # Collect evaluation episodes
+      eval_batch = eval_sampler.sample_n_episodes(n_episodes=5,
+                                                  actor=actor,
+                                                  train_sampling=False)
+
+      # Print average return per iteration
+      print(f"Iter: {i}, eval score: "
+            f"{eval_batch.create_logs()['avg_return']}, "
+            "buffer score: "
+            f"{replay_buffer.create_logs()['avg_return']")
 ```
 
 ## Usage With Custom Environments
