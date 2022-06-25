@@ -1612,7 +1612,7 @@ class CDQN(nn.Module, Checkpointer, metaclass=abc.ABCMeta):
         
         qvalues = self.forward_np(obs=obs, acs=acs).squeeze()
         
-        return q_values
+        return qvalues
                 
     def estimate_advantage(self, paths_or_sample, actor) -> np.ndarray:
         
