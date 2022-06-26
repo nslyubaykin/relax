@@ -36,7 +36,7 @@ ReLAx library contains implementations of the following algorithms:
     - Noisy DQN
     - Categorical DQN
     - RAINBOW
-    - DDPG
+    - DDPG: [Example](https://github.com/nslyubaykin/relax_ddpg_example/blob/master/ddpg_tutorial.ipynb)
     - TD3
     - SAC
 - Model Based:
