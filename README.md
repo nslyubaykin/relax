@@ -37,8 +37,8 @@ ReLAx library contains implementations of the following algorithms:
     - Categorical DQN
     - RAINBOW
     - DDPG: [Example](https://github.com/nslyubaykin/relax_ddpg_example/blob/master/ddpg_tutorial.ipynb)
-    - TD3
-    - SAC
+    - TD3: [Example](https://github.com/nslyubaykin/relax_td3_example/blob/master/td3_tutorial.ipynb)
+    - SAC: [Example](https://github.com/nslyubaykin/relax_sac_example/blob/master/sac_tutorial.ipynb)
 - Model Based:
   - Random Shooting
   - Cross Entropy Method (CEM)
