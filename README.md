@@ -62,6 +62,7 @@ And other options for building non-standard RL architectures:
   - Training PPO with DQN as a critic
   - Model-based axcelerated RAINBOW
   - Model-based initialization for SAC
+  - Multi-tasking with model-based RL
 
 ## Minimal Examples
 
