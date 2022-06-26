@@ -6,6 +6,29 @@ from torch.nn import functional as F
 from relax.zoo.layers import NoisyLinear
 
 
+class VMLP(nn.Module):
+    
+    def __init__(self, obs_dim, nlayers,
+                 nunits, activation=nn.Tanh(),
+                 out_activation=nn.Identity()):
+        
+        super(VMLP, self).__init__()
+        
+        layers = []
+        in_size = obs_dim
+        for _ in range(nlayers):
+            layers.append(nn.Linear(in_size, nunits))
+            layers.append(activation)
+            in_size = nunits
+        layers.append(nn.Linear(in_size, 1))
+        layers.append(out_activation)
+        
+        self.layers = nn.Sequential(*layers)
+        
+    def forward(self, x):
+        return self.layers(x)
+
+
 class DiscQMLP(nn.Module):
     
     def __init__(self, obs_dim, acs_dim, nlayers,
