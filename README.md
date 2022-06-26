@@ -225,7 +225,7 @@ pip install -e .
 In the future the following functionality is planned to be added:
 
  - Curiosity (RND)
- - Offline RL (BEAR, BCQ)
+ - Offline RL (CQL, BEAR, BCQ)
  - Decision Transformers
  - QR-DQN
  - IQN
