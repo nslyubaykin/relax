@@ -26,7 +26,7 @@ ReLAx library contains implementations of the following algorithms:
 
 - Value Based (Model-Free):
   - On-Policy
-    - VPG
+    - VPG: [example](https://github.com/nslyubaykin/relax_vpg_example/blob/master/vpg_example.ipynb)
     - A2C
     - TRPO
     - PPO
@@ -37,9 +37,9 @@ ReLAx library contains implementations of the following algorithms:
     - Noisy DQN
     - Categorical DQN
     - RAINBOW
-    - DDPG: [Example](https://github.com/nslyubaykin/relax_ddpg_example/blob/master/ddpg_tutorial.ipynb)
-    - TD3: [Example](https://github.com/nslyubaykin/relax_td3_example/blob/master/td3_tutorial.ipynb)
-    - SAC: [Example](https://github.com/nslyubaykin/relax_sac_example/blob/master/sac_tutorial.ipynb)
+    - DDPG: [example](https://github.com/nslyubaykin/relax_ddpg_example/blob/master/ddpg_tutorial.ipynb)
+    - TD3: [example](https://github.com/nslyubaykin/relax_td3_example/blob/master/td3_tutorial.ipynb)
+    - SAC: [example](https://github.com/nslyubaykin/relax_sac_example/blob/master/sac_tutorial.ipynb)
 - Model Based:
   - Random Shooting
   - Cross Entropy Method (CEM)
