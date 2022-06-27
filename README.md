@@ -27,6 +27,7 @@ ReLAx library contains implementations of the following algorithms:
 - Value Based (Model-Free):
   - On-Policy
     - VPG
+    - A2C
     - TRPO
     - PPO
   - Off-policy
