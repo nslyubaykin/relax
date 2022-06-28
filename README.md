@@ -229,6 +229,7 @@ In the future the following functionality is planned to be added:
  - Curiosity (RND)
  - Offline RL (CQL, BEAR, BCQ)
  - Decision Transformers
+ - PPG
  - QR-DQN
  - IQN
  - Discrete SAC
