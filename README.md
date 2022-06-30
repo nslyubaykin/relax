@@ -28,7 +28,7 @@ ReLAx library contains implementations of the following algorithms:
   - On-Policy
     - VPG: [example](https://github.com/nslyubaykin/relax_vpg_example/blob/master/vpg_example.ipynb)
     - A2C
-    - TRPO: [example](https://github.com/nslyubaykin/relax_trpo_example/blob/master/trpo_example.ipynb)
+    - TRPO: [example (correct link)](https://github.com/nslyubaykin/relax_trpo_example/blob/master/trpo_example.ipynb)
     - PPO
   - Off-policy
     - DQN 
