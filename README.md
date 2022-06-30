@@ -262,7 +262,6 @@ In the future the following functionality is planned to be added:
 
 ## Known Issues
   
-  - Correct Q-val and Val estimation for CategoricalDQN!
-  - Lack of documentation
+  - Lack of documentation (right now compensated with usage examples)
   - Filtering Reward Weigthed Refinement declared performance in paper is not yet reached
   - DYNA-Q is not campatible with PER as it is not clear which priority to assign to synthetic branched transitions
