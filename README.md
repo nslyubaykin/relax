@@ -220,7 +220,30 @@ pip install -e .
 
 ### Atari Environments
 
+ReLAx package was developed and tested with gym\[atari\]==0.17.2. Newer versions also should work, however, its compatibility with provided Atari wrappers is uncertain.
+
+Here is Gym Atari installation guide:
+
 ```.bash
+pip install gym[atari]==0.17.2
+```
+In case of "ROMs not found" error do the following steps:
+
+1) Download ROMs archieve
+```.bash
+wget http://www.atarimania.com/roms/Roms.rar
+```
+2) Unpack it
+```.bash
+unrar x Roms.rar
+```
+3) Install atari_py
+```.bash
+pip install atari_py
+```
+4) Provide atari_py with ROMS
+```.bash
+python -m atari_py.import_roms ROMS
 ```
 
 ## Further Developments
