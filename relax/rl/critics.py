@@ -728,7 +728,7 @@ class DQN(nn.Module,
     
     def estimate_value(self, paths_or_sample) -> np.ndarray:
         
-        obs = handle_lags(data=sample,
+        obs = handle_lags(data=paths_or_sample,
                           fields={'obs': 'lag_concat_obs'},
                           nlags=self.obs_nlags,
                           concat_axis=self.obs_concat_axis,
@@ -746,14 +746,14 @@ class DQN(nn.Module,
     
     def estimate_qvalue(self, paths_or_sample) -> np.ndarray:
         
-        obs = handle_lags(data=sample,
+        obs = handle_lags(data=paths_or_sample,
                           fields={'obs': 'lag_concat_obs'},
                           nlags=self.obs_nlags,
                           concat_axis=self.obs_concat_axis,
                           expand_axis=self.obs_expand_axis,
                           padding=self.obs_padding)
 
-        acs = sample.unpack(['acs'])
+        acs = paths_or_sample.unpack(['acs'])
 
         obs = from_numpy(self.device, obs)
         acs = from_numpy(self.device, acs)
