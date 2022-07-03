@@ -55,7 +55,7 @@ ReLAx offers a set of special features:
   - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling]()
   - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint]()
   - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion]()
-  - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for *Env-Name*]()
+  - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for \*Env-Name\*]()
   - Simple interface for model-based axceleration: [DYNA Model-Based Axceleration with TD3]()
 
 And other options for building non-standard RL architectures:
