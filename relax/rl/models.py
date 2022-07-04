@@ -1,5 +1,6 @@
 import abc
 import torch
+import warnings
 import numpy as np
 
 from torch import nn
@@ -192,13 +193,15 @@ class DeltaEnvModel(BaseModel, nn.Module):
         
     def schedules_step(self):
         self.global_step += 1
-        for os_name in self.obs_schedulers:
-            os = getattr(self, os_name)
-            os.step()
-        if self.rews_models is not None:
-            for rs_name in self.rews_schedulers:
-                rs = getattr(self, rs_name)
-                rs.step()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            for os_name in self.obs_schedulers:
+                os = getattr(self, os_name)
+                os.step()
+            if self.rews_models is not None:
+                for rs_name in self.rews_schedulers:
+                    rs = getattr(self, rs_name)
+                    rs.step()
                 
     def update_buffer_stats(self, buffer: ReplayBuffer):
         
