@@ -27,7 +27,7 @@ ReLAx library contains implementations of the following algorithms:
 - Value Based (Model-Free):
   - On-Policy
     - VPG: [example](https://github.com/nslyubaykin/relax_vpg_example/blob/master/vpg_example.ipynb)
-    - A2C: [exalple](https://github.com/nslyubaykin/relax_a2c_example/blob/master/a2c_example.ipynb)
+    - A2C: [example](https://github.com/nslyubaykin/relax_a2c_example/blob/master/a2c_example.ipynb)
     - TRPO: [example](https://github.com/nslyubaykin/relax_trpo_example/blob/master/trpo_example.ipynb)
     - PPO: [example](https://github.com/nslyubaykin/relax_ppo_example/blob/master/ppo_example.ipynb)
   - Off-policy
