@@ -1,7 +1,7 @@
 # ReLAx
 ReLAx - Reinforcement Learning Applications
 
-ReLAx is an object oriented library for deep reinforcement learning built on top of PyTotch.
+ReLAx is an object oriented library for deep reinforcement learning built on top of PyTorch.
 
 # Contents 
 <!-- toc -->
