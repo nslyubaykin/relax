@@ -15,7 +15,7 @@ from relax.data.utils import normalize, unnormalize
 from relax.data.utils import handle_lags, handle_n_step
 from relax.data.sampling import PathList
 from relax.data.replay_buffer import ReplayBuffer, BufferSample
-from relax.data.axceleration import DynaAxcelerator
+from relax.data.acceleration import DynaAccelerator
 from relax.zoo.layers import NoisyLinear
 from relax.schedules import init_schedule
 from relax.torch.utils import *
@@ -438,7 +438,7 @@ class BootstrappedContinuous(BaseCritic):
     
 
 class DQN(nn.Module,
-          DynaAxcelerator,
+          DynaAccelerator,
           Checkpointer, 
           metaclass=abc.ABCMeta):
     
@@ -586,9 +586,9 @@ class DQN(nn.Module,
                 sample = buffer.sample(batch_size=batch_size,
                                        p_learner=self if self.prioritized_sampling else None)
                 
-                # DYNA axceleration if needed
-                if hasattr(self, 'axceleration'):
-                    sample.axcelerate(**self.axceleration_config)
+                # DYNA acceleration if needed
+                if hasattr(self, 'acceleration'):
+                    sample.accelerate(**self.acceleration_config)
                 
                 # handling multistep learning and crating next_obs:
                 n_steps = self.n_step_learning.value(self.global_step)
@@ -896,9 +896,9 @@ class CategoricalDQN(DQN):
                 sample = buffer.sample(batch_size=batch_size,
                                        p_learner=self if self.prioritized_sampling else None)
                 
-                # DYNA axceleration if needed
-                if hasattr(self, 'axceleration'):
-                    sample.axcelerate(**self.axceleration_config)
+                # DYNA acceleration if needed
+                if hasattr(self, 'acceleration'):
+                    sample.accelerate(**self.acceleration_config)
                 
                 # handling multistep learning and crating next_obs:
                 n_steps = self.n_step_learning.value(self.global_step)

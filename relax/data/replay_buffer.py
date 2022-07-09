@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 from relax.data.sampling import PathList, Path, PathBranch
 from relax.data.utils import concat_expand_lags
-from relax.data.axceleration import _pre_proc_data, _axcelerate
+from relax.data.acceleration import _pre_proc_data, _accelerate
 from relax.data.prioritization import learner_id, sample_unique
 from relax.data.prioritization import UniformReference, SumTree
 
@@ -68,7 +68,7 @@ class ReplayBuffer(PathList):
     def __add__(self, other):
         raise NotImplementedError(f'Addition is not defined for {type(self).__name__}')
         
-    def axcelerate(self,
+    def accelerate(self,
                    actor, 
                    model,
                    h: int,
@@ -77,7 +77,7 @@ class ReplayBuffer(PathList):
                    inplace=False,
                    train_sampling=True,
                    cut_tails=False):
-        raise NotImplementedError("Direct axceleration is not defined "
+        raise NotImplementedError("Direct acceleration is not defined "
                                   f"for {type(self).__name__}, only for its sample")
         
     def decelerate(self):
@@ -533,7 +533,7 @@ class BufferSample(object):
         
         return real_names
     
-    def axcelerate(self,
+    def accelerate(self,
                    actor, 
                    model,
                    h: int,
@@ -543,10 +543,10 @@ class BufferSample(object):
                    train_sampling=True,
                    cut_tails=False):
         
-        # if already axcelerated - decelerate first
-        # no multiple degree axceleration like for PathList right now
+        # if already accelerated - decelerate first
+        # no multiple degree acceleration like for PathList right now
         if self.synth_rollouts is not None:
-            self.decelerate() # later may be added recursive axceleration
+            self.decelerate() # later may be added recursive acceleration
         
         if h > 0 and tau > 0:
         
@@ -567,7 +567,7 @@ class BufferSample(object):
                                         fork_transition=trind) for pathind, trind in sample_data]
 
             # performing synthetic rollouts
-            path_branches, transitions_total = _axcelerate(
+            path_branches, transitions_total = _accelerate(
                 data=self,
                 model_obs=model_obs, 
                 actor_obs=actor_obs,

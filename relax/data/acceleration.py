@@ -76,7 +76,7 @@ def _pre_proc_data(data,
     return model_obs, actor_obs, obs, mba_sample
 
 
-def _axcelerate(data,
+def _accelerate(data,
                 model_obs: np.ndarray, 
                 actor_obs: np.ndarray,
                 obs: np.ndarray,
@@ -203,9 +203,9 @@ def _axcelerate(data,
     return path_branches, transitions_total
 
 
-class DynaAxcelerator:
+class DynaAccelerator:
     
-    def set_axceleration(self, 
+    def set_acceleration(self, 
                          model,
                          actor=None,
                          h=1,
@@ -214,11 +214,11 @@ class DynaAxcelerator:
                          train_sampling=True,
                          cut_tails=False):
         
-        # if actor is not specified - use itself for axceleration
+        # if actor is not specified - use itself for acceleration
         if actor is None:
             actor = self
         
-        self.axceleration = {
+        self.acceleration = {
             'model': model,
             'actor': actor,
             'h': init_schedule(h, discrete=True),
@@ -230,9 +230,9 @@ class DynaAxcelerator:
         }
     
     @property
-    def axceleration_config(self):
+    def acceleration_config(self):
         out = {}
-        for k, v in self.axceleration.items():
+        for k, v in self.acceleration.items():
             if k in ['h', 'tau', 'real_ratio']:
                 out[k] = v.value(self.global_step)
             else:

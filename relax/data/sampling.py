@@ -9,7 +9,7 @@ from warnings import warn
 from itertools import chain
 
 from relax.data.utils import disc_cumsum
-from relax.data.axceleration import _pre_proc_data, _axcelerate
+from relax.data.acceleration import _pre_proc_data, _accelerate
 
 
 class Path:
@@ -527,7 +527,7 @@ class PathList:
     def get_fields_names(self):
         return set(list(chain(*[list(path.data.keys()) for path in self.rollouts])))
     
-    def axcelerate(self,
+    def accelerate(self,
                    actor, 
                    model,
                    h: int,
@@ -560,7 +560,7 @@ class PathList:
                                         fork_transition=trind) for pathind, trind in sample_data]
 
             # performing synthetic rollouts
-            path_branches, transitions_total = _axcelerate(
+            path_branches, transitions_total = _accelerate(
                 data=self,
                 model_obs=model_obs, 
                 actor_obs=actor_obs,

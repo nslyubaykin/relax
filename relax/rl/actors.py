@@ -18,7 +18,7 @@ from relax.data.sampling import PathList
 from relax.data.replay_buffer import ReplayBuffer
 from relax.data.utils import normalize, handle_lags, handle_n_step
 from relax.schedules import init_schedule
-from relax.data.axceleration import DynaAxcelerator
+from relax.data.acceleration import DynaAccelerator
 from relax.torch.utils import *
 
 
@@ -811,7 +811,7 @@ class ArgmaxQValue(BaseActor, metaclass=abc.ABCMeta):
 
     
 class DDPG(BaseActor,
-           DynaAxcelerator,
+           DynaAccelerator,
            nn.Module, 
            metaclass=abc.ABCMeta):
     
@@ -963,9 +963,9 @@ class DDPG(BaseActor,
                 sample = buffer.sample(batch_size=batch_size,
                                        p_learner=self.critic if self.critic.prioritized_sampling else None)
                 
-                # DYNA axceleration if needed
-                if hasattr(self, 'axceleration'):
-                    sample.axcelerate(**self.axceleration_config)
+                # DYNA acceleration if needed
+                if hasattr(self, 'acceleration'):
+                    sample.accelerate(**self.acceleration_config)
                 
                 # handling multistep learning and crating next_obs:
                 n_steps = self.critic.n_step_learning.value(self.critic.global_step)
@@ -1194,9 +1194,9 @@ class TD3(DDPG):
                 sample = buffer.sample(batch_size=batch_size,
                                        p_learner=self.critic if self.critic.prioritized_sampling else None)
                 
-                # DYNA axceleration if needed
-                if hasattr(self, 'axceleration'):
-                    sample.axcelerate(**self.axceleration_config)
+                # DYNA acceleration if needed
+                if hasattr(self, 'acceleration'):
+                    sample.accelerate(**self.acceleration_config)
                 
                 # handling multistep learning and crating next_obs:
                 n_steps = self.critic.n_step_learning.value(self.critic.global_step)
@@ -1334,7 +1334,7 @@ class TD3(DDPG):
     
     
 class SAC(BaseActor,
-          DynaAxcelerator,
+          DynaAccelerator,
           nn.Module, 
           metaclass=abc.ABCMeta):
     
@@ -1509,9 +1509,9 @@ class SAC(BaseActor,
                 sample = buffer.sample(batch_size=batch_size,
                                        p_learner=self.critic if self.critic.prioritized_sampling else None)
                 
-                # DYNA axceleration if needed
-                if hasattr(self, 'axceleration'):
-                    sample.axcelerate(**self.axceleration_config)
+                # DYNA acceleration if needed
+                if hasattr(self, 'acceleration'):
+                    sample.accelerate(**self.acceleration_config)
                 
                 # handling multistep learning and crating next_obs:
                 n_steps = self.critic.n_step_learning.value(self.critic.global_step)
