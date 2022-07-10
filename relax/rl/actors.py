@@ -1768,10 +1768,14 @@ class RandomShooting(BaseActor):
                                                                [horizon, n_candidate_sequences, self.acs_dim])
 
                 # evaluate them with a model
-                _, pred_rews = self.model.predict_action_sequence(
+                _, pred_rews, terminals = self.model.predict_action_sequence(
                     lag_obs=repeated_obs,
                     action_sequence=candidate_action_sequences
                 )
+                
+                # discard beyond terminal transitions if any
+                terminal_mask = terminals.cumsum(axis=0) <= 1
+                pred_rews *= terminal_mask
 
                 # choose the best action sequence
                 best_action_sequence = candidate_action_sequences[:, pred_rews.sum(axis=0).argmax(), :].copy()
