@@ -31,7 +31,7 @@ ReLAx library contains implementations of the following algorithms:
     - TRPO: [example](https://github.com/nslyubaykin/relax_trpo_example/blob/master/trpo_example.ipynb)
     - PPO: [example](https://github.com/nslyubaykin/relax_ppo_example/blob/master/ppo_example.ipynb)
   - Off-policy
-    - DQN 
+    - DQN: [example](https://github.com/nslyubaykin/relax_dqn_example/blob/master/dqn_tutorial.ipynb)
     - Double DQN
     - Dueling DQN
     - Noisy DQN
@@ -46,7 +46,7 @@ ReLAx library contains implementations of the following algorithms:
   - Filtering Reward Weigthed Refinement (PDDM)
 - Hybrid MB-MF 
   - MBPO
-  - DYNA-Q
+  - DYNA-Q: [example](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
 
 ## Special Features
 ReLAx offers a set of special features:
@@ -56,12 +56,12 @@ ReLAx offers a set of special features:
   - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint]()
   - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion]()
   - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for \*Env-Name\*]()
-  - Simple interface for model-based axceleration: [DYNA Model-Based Axceleration with TD3]()
+  - Simple interface for model-based acceleration: [DYNA Model-Based Axceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
 
 And other options for building non-standard RL architectures:
 
   - Training PPO with DQN as a critic
-  - Model-based axcelerated RAINBOW
+  - Model-based accelerated RAINBOW
   - Model-based initialization for SAC
   - Multi-tasking with model-based RL
 
