@@ -31,7 +31,7 @@ ReLAx library contains implementations of the following algorithms:
     - TRPO: [example](https://github.com/nslyubaykin/relax_trpo_example/blob/master/trpo_example.ipynb)
     - PPO: [example](https://github.com/nslyubaykin/relax_ppo_example/blob/master/ppo_example.ipynb)
   - Off-policy
-    - DQN: [example](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
+    - DQN: [example](https://github.com/nslyubaykin/relax_dqn_example/blob/master/dqn_tutorial.ipynb)
     - Double DQN
     - Dueling DQN
     - Noisy DQN
