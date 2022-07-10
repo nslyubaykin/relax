@@ -33,7 +33,7 @@ ReLAx library contains implementations of the following algorithms:
   - Off-policy
     - DQN: [example](https://github.com/nslyubaykin/relax_dqn_example/blob/master/dqn_tutorial.ipynb)
     - Double DQN: [example](https://github.com/nslyubaykin/relax_double_dqn_example/blob/master/double_dqn_tutorial.ipynb)
-    - Dueling DQN
+    - Dueling DQN: [example](https://github.com/nslyubaykin/relax_dueling_dqn_example/blob/master/dueling_dqn_tutorial.ipynb)
     - Noisy DQN
     - Categorical DQN
     - RAINBOW
