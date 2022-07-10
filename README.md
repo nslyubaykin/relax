@@ -32,7 +32,7 @@ ReLAx library contains implementations of the following algorithms:
     - PPO: [example](https://github.com/nslyubaykin/relax_ppo_example/blob/master/ppo_example.ipynb)
   - Off-policy
     - DQN: [example](https://github.com/nslyubaykin/relax_dqn_example/blob/master/dqn_tutorial.ipynb)
-    - Double DQN
+    - Double DQN: [example](https://github.com/nslyubaykin/relax_double_dqn_example/blob/master/double_dqn_tutorial.ipynb)
     - Dueling DQN
     - Noisy DQN
     - Categorical DQN
