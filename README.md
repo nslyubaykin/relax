@@ -41,7 +41,7 @@ ReLAx library contains implementations of the following algorithms:
     - TD3: [example](https://github.com/nslyubaykin/relax_td3_example/blob/master/td3_tutorial.ipynb)
     - SAC: [example](https://github.com/nslyubaykin/relax_sac_example/blob/master/sac_tutorial.ipynb)
 - Model Based:
-  - Random Shooting
+  - Random Shooting: [example](https://github.com/nslyubaykin/relax_random_shooting_example/blob/master/random_shooting_tutorial.ipynb)
   - Cross Entropy Method (CEM)
   - Filtering Reward Weigthed Refinement (PDDM)
 - Hybrid MB-MF 
