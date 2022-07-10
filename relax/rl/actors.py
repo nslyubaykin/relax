@@ -1748,7 +1748,7 @@ class RandomShooting(BaseActor):
         
         for obs_index in range(obs.shape[0]):
         
-            if self.global_step < self.n_random_steps:
+            if self.global_step < self.n_random_steps and self.train_sampling:
 
                 acs = np.random.uniform(self.min_acs, self.max_acs,
                                         [self.acs_dim])
@@ -1829,7 +1829,7 @@ class CEM(RandomShooting):
         
         for obs_index in range(obs.shape[0]):
         
-            if self.global_step < self.n_random_steps:
+            if self.global_step < self.n_random_steps and self.train_sampling:
 
                 acs = np.random.uniform(self.min_acs, self.max_acs,
                                         [self.acs_dim])
@@ -1958,7 +1958,7 @@ class FRWR(RandomShooting):
            
         for obs_index in range(obs.shape[0]):
         
-            if self.global_step < self.n_random_steps:
+            if self.global_step < self.n_random_steps and self.train_sampling:
 
                 acs = np.random.uniform(self.min_acs, self.max_acs,
                                         [self.acs_dim])
