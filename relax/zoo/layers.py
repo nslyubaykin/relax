@@ -57,7 +57,11 @@ class NoisyLinear(nn.Module):
         epsilon_out = self.scale_noise(self.out_features)
 
         # outer product
-        self.weight_epsilon.copy_(epsilon_out.ger(epsilon_in))
+        outer_product = torch.matmul(
+            epsilon_out.unsqueeze(-1), 
+            epsilon_in.unsqueeze(0)
+        )
+        self.weight_epsilon.copy_(outer_product)
         self.bias_epsilon.copy_(epsilon_out)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

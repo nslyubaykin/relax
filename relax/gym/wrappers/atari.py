@@ -130,7 +130,7 @@ def _process_frame84(frame, hcrop=0, hstretch=100):
     #x_t = resized_screen[18:102, :]
     x_t = resized_screen[hcrop:(hcrop+84), :]
     x_t = np.reshape(x_t, [84, 84, 1])
-    return x_t.astype(np.uint8) # Put copy here?
+    return x_t.copy().astype(np.uint8)
 
 
 class ProcessFrame84(gym.Wrapper):
