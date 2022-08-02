@@ -34,8 +34,8 @@ ReLAx library contains implementations of the following algorithms:
     - DQN: [example](https://github.com/nslyubaykin/relax_dqn_example/blob/master/dqn_tutorial.ipynb)
     - Double DQN: [example](https://github.com/nslyubaykin/relax_double_dqn_example/blob/master/double_dqn_tutorial.ipynb)
     - Dueling DQN: [example](https://github.com/nslyubaykin/relax_dueling_dqn_example/blob/master/dueling_dqn_tutorial.ipynb)
-    - Noisy DQN
-    - Categorical DQN
+    - Noisy DQN: [example](https://github.com/nslyubaykin/relax_noisy_dqn_example/blob/master/noisy_dqn_tutorial.ipynb)
+    - Categorical DQN: [example](https://github.com/nslyubaykin/relax_categorical_dqn_example/blob/master/categorical_dqn_tutorial.ipynb)
     - RAINBOW
     - DDPG: [example](https://github.com/nslyubaykin/relax_ddpg_example/blob/master/ddpg_tutorial.ipynb)
     - TD3: [example](https://github.com/nslyubaykin/relax_td3_example/blob/master/td3_tutorial.ipynb)
