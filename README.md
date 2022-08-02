@@ -42,7 +42,7 @@ ReLAx library contains implementations of the following algorithms:
     - SAC: [example](https://github.com/nslyubaykin/relax_sac_example/blob/master/sac_tutorial.ipynb)
 - Model Based:
   - Random Shooting: [example](https://github.com/nslyubaykin/relax_random_shooting_example/blob/master/random_shooting_tutorial.ipynb)
-  - Cross Entropy Method (CEM)
+  - Cross Entropy Method (CEM): [example](https://github.com/nslyubaykin/relax_cem_example/blob/master/cem_tutorial.ipynb)
   - Filtering Reward Weigthed Refinement (PDDM)
 - Hybrid MB-MF 
   - MBPO
