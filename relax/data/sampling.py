@@ -5,6 +5,7 @@ import numpy as np
 import multiprocessing as mp
 
 from math import ceil
+from copy import deepcopy
 from warnings import warn
 from itertools import chain
 
@@ -409,6 +410,9 @@ class PathList:
         out.rollouts = self.rollouts + other.rollouts
         out.n_transitions = self.n_transitions + other.n_transitions
         return out
+        
+    def copy(self):
+    	return deepcopy(self)
     
     def n_paths(self):
         return len(self.rollouts)
