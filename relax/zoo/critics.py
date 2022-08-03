@@ -27,6 +27,32 @@ class VMLP(nn.Module):
         
     def forward(self, x):
         return self.layers(x)
+    
+    
+class VLSTM(nn.Module):
+    
+    def __init__(self, obs_dim, nlayers_lstm,
+                 nunits_lstm, nunits_dense,
+                 activation=nn.Tanh(),
+                 out_activation=nn.Identity()):
+        
+        super(VLSTM, self).__init__()
+        
+        self.lstm = nn.LSTM(obs_dim, nunits_lstm, nlayers_lstm)
+        self.dense1 = nn.Linear(nunits_lstm, nunits_dense)
+        self.act_dense1 = activation
+        self.dense_out = nn.Linear(nunits_dense, 1)
+        self.act_out = out_activation
+        
+        
+    def forward(self, x):
+        h, _ = self.lstm(x)
+        pooled, _ = torch.max(h, 1)
+        dense1 = self.dense1(pooled)
+        dense1 = self.act_dense1(dense1)
+        dense_out = self.dense_out(dense1)
+        values = self.act_out(dense_out)
+        return values
 
 
 class DiscQMLP(nn.Module):

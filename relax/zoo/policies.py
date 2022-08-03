@@ -81,7 +81,9 @@ class NormalLSTM(nn.Module):
     
     def __init__(self, obs_dim, acs_dim, nlayers_lstm,
                  nunits_lstm, nunits_dense, activation=nn.Tanh(),
-                 out_activation=nn.Identity()):
+                 out_activation=nn.Identity(),
+                 acs_scale=1, acs_bias=0,
+                 init_log_std=0.0):
         
         super(NormalLSTM, self).__init__()
         
@@ -92,18 +94,21 @@ class NormalLSTM(nn.Module):
         self.act_out = out_activation
         
         self.log_stds = nn.Parameter(
-            torch.zeros(acs_dim)
-        )    
+            torch.ones(acs_dim) * init_log_std
+        )
+        
+        self.acs_scale = acs_scale
+        self.acs_bias = acs_bias   
         
     def forward(self, x):
-        #if len(x.shape) < 3:
-        #    x = x.unsqueeze(0)
+        
         h, _ = self.lstm(x)
         pooled, _ = torch.max(h, 1)
         dense1 = self.dense1(pooled)
         dense1 = self.act_dense1(dense1)
         dense_out = self.dense_out(dense1)
-        means = torch.squeeze(self.act_out(dense_out))
+        means = self.act_out(dense_out)
+        means = means * self.acs_scale + self.acs_bias
         cov = torch.diag_embed(torch.exp(self.log_stds))
         
         y = MultivariateNormal(loc=means,
