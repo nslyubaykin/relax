@@ -43,7 +43,7 @@ ReLAx library contains implementations of the following algorithms:
 - Model Based:
   - Random Shooting: [example](https://github.com/nslyubaykin/relax_random_shooting_example/blob/master/random_shooting_tutorial.ipynb)
   - Cross Entropy Method (CEM): [example](https://github.com/nslyubaykin/relax_cem_example/blob/master/cem_tutorial.ipynb)
-  - Filtering Reward Weigthed Refinement (PDDM): [example]:(https://github.com/nslyubaykin/relax_frwr_example/blob/master/frwr_tutorial.ipynb)
+  - Filtering Reward Weigthed Refinement (PDDM): [example](https://github.com/nslyubaykin/relax_frwr_example/blob/master/frwr_tutorial.ipynb)
 - Hybrid MB-MF 
   - MBPO
   - DYNA-Q: [example](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
