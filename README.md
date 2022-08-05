@@ -52,7 +52,7 @@ ReLAx library contains implementations of the following algorithms:
 ReLAx offers a set of special features:
 
   - Simple interface for lagging environment observations: [Handling Partial Observability with lagged LSTM Policy](https://github.com/nslyubaykin/rnns_for_pomdp/blob/master/lstm_for_pomdp.ipynb)
-  - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling]()
+  - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo/blob/master/parallel_ppo.ipynb)
   - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint]()
   - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion]()
   - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for \*Env-Name\*]()
