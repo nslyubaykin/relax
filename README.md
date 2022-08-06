@@ -49,7 +49,7 @@ ReLAx library contains implementations of the following algorithms:
   - DYNA-Q: [example](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
 
 ## Special Features
-ReLAx offers a set of special features:
+__ReLAx offers a set of special features:__
 
   - Simple interface for lagging environment observations: [Handling Partial Observability with lagged LSTM Policy](https://github.com/nslyubaykin/rnns_for_pomdp/blob/master/lstm_for_pomdp.ipynb)
   - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo/blob/master/parallel_ppo.ipynb)
@@ -58,7 +58,7 @@ ReLAx offers a set of special features:
   - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for \*Env-Name\*]()
   - Simple interface for model-based acceleration: [DYNA Model-Based Axceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
 
-And other options for building non-standard RL architectures:
+__And other options for building non-standard RL architectures:__
 
   - Training PPO with DQN as a critic
   - Model-based accelerated RAINBOW
@@ -208,7 +208,7 @@ Installing into a separate virtual environment:
 git clone https://github.com/nslyubaykin/relax
 cd relax
 conda create -n relax python=3.6
-source activate relax
+conda activate relax
 pip install -r requirements.txt
 pip install -e .
 ```
