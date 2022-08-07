@@ -182,7 +182,7 @@ class DeltaEnvModel(BaseModel, nn.Module):
                 rm.to(self.device)
                 ro.load_state_dict(ro.state_dict())
                 
-    def set_reward_function(reward_function=None):
+    def set_reward_function(self, reward_function=None):
         
         if reward_function is None and self.rews_models is None:
             raise ValueError(
