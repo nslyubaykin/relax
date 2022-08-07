@@ -53,7 +53,7 @@ __ReLAx offers a set of special features:__
 
   - Simple interface for lagging environment observations: [Handling Partial Observability with lagged LSTM Policy](https://github.com/nslyubaykin/rnns_for_pomdp/blob/master/lstm_for_pomdp.ipynb)
   - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo/blob/master/parallel_ppo.ipynb)
-  - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint]()
+  - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint](https://github.com/nslyubaykin/trpo_schedule_kl/blob/master/trpo_schedule_kl.ipynb)
   - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion]()
   - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for \*Env-Name\*]()
   - Simple interface for model-based acceleration: [DYNA Model-Based Axceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
