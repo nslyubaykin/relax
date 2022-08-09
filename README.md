@@ -63,7 +63,7 @@ __And other options for building non-standard RL architectures:__
   - Training PPO with DQN as a critic
   - Model-based accelerated RAINBOW
   - Model-based initialization for SAC
-  - Multi-tasking with model-based RL
+  - [Multi-tasking with model-based RL](https://github.com/nslyubaykin/mbrl_multitasking/blob/master/mbrl_multitasking.ipynb)
 
 ## Minimal Examples
 
