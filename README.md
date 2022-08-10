@@ -45,7 +45,7 @@ ReLAx library contains implementations of the following algorithms:
   - Cross Entropy Method (CEM): [example](https://github.com/nslyubaykin/relax_cem_example/blob/master/cem_tutorial.ipynb)
   - Filtering Reward Weigthed Refinement (PDDM): [example](https://github.com/nslyubaykin/relax_frwr_example/blob/master/frwr_tutorial.ipynb)
 - Hybrid MB-MF 
-  - MBPO
+  - MBPO: [example](https://github.com/nslyubaykin/relax_mbpo_example/blob/master/mbpo_tutorial.ipynb)
   - DYNA-Q: [example](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
 
 ## Special Features
