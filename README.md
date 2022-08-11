@@ -43,7 +43,7 @@ ReLAx library contains implementations of the following algorithms:
 - Model Based:
   - Random Shooting: [example](https://github.com/nslyubaykin/relax_random_shooting_example/blob/master/random_shooting_tutorial.ipynb)
   - Cross Entropy Method (CEM): [example](https://github.com/nslyubaykin/relax_cem_example/blob/master/cem_tutorial.ipynb)
-  - Filtering Reward Weigthed Refinement (PDDM): [example](https://github.com/nslyubaykin/relax_frwr_example/blob/master/frwr_tutorial.ipynb)
+  - Filtering & Reward Weigthed Refinement (PDDM): [example](https://github.com/nslyubaykin/relax_frwr_example/blob/master/frwr_tutorial.ipynb)
 - Hybrid MB-MF 
   - MBPO: [example](https://github.com/nslyubaykin/relax_mbpo_example/blob/master/mbpo_tutorial.ipynb)
   - DYNA-Q: [example](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
@@ -56,7 +56,7 @@ __ReLAx offers a set of special features:__
   - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint](https://github.com/nslyubaykin/trpo_schedule_kl/blob/master/trpo_schedule_kl.ipynb)
   - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion]()
   - Support of Prioritised Experience Replay for all off-policy value-based algorithms: [Prioritised DQN for \*Env-Name\*]()
-  - Simple interface for model-based acceleration: [DYNA Model-Based Axceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb)
+  - Simple interface for model-based acceleration: [DYNA Model-Based Acceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb) / [MBPO with SAC](https://github.com/nslyubaykin/relax_mbpo_example/blob/master/mbpo_tutorial.ipynb)
 
 __And other options for building non-standard RL architectures:__
 
@@ -263,5 +263,5 @@ In the future the following functionality is planned to be added:
 ## Known Issues
   
   - Lack of documentation (right now compensated with usage examples)
-  - Filtering Reward Weigthed Refinement declared performance in paper is not yet reached
+  - Filtering & Reward Weigthed Refinement declared performance in paper is not yet reached
   - DYNA-Q is not campatible with PER as it is not clear which priority to assign to synthetic branched transitions (possible option: same priority as its parent transition)
