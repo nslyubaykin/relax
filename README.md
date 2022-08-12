@@ -8,10 +8,10 @@ ReLAx is an object oriented library for deep reinforcement learning built on top
 
 - [Implemented Algorithms](#implemented-algorithms)
 - [Special Features](#special-features)
+- [Usage With Custom Environments](#usage-with-custom-environments)
 - [Minimal Examples](#minimal-examples)
   - [On Policy](#on-policy)
   - [Off policy](#off-policy)
-- [Usage With Custom Environments](#usage-with-custom-environments)
 - [Installation](#installation)
   - [Building from GitHub Source](#building-from-github-source)
   - [Mujoco](#mujoco)
@@ -64,6 +64,11 @@ __And other options for building non-standard RL architectures:__
   - Model-based accelerated RAINBOW
   - Model-based initialization for SAC
   - [Multi-tasking with model-based RL](https://github.com/nslyubaykin/mbrl_multitasking/blob/master/mbrl_multitasking.ipynb)
+  
+## Usage With Custom Environments
+Some examples how to use ReLAx with user defined envirionments:
+
+  - Playing 2048 with RAINBOW
 
 ## Minimal Examples
 
@@ -193,11 +198,6 @@ for i in range(100000):
             "buffer score: " + \
             f"{replay_buffer.create_logs()['avg_return']}")
 ```
-
-## Usage With Custom Environments
-Some examples how to use ReLAx with user defined envirionments:
-
-  - Playing 2048 with RAINBOW
 
 ## Installation
 
