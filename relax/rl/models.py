@@ -324,9 +324,13 @@ class DeltaEnvModel(BaseModel, nn.Module):
         lag_obs_norm = normalize(data=lag_obs,
                                  mean=self.buffer_stats['lag_obs_mean'],
                                  std=self.buffer_stats['lag_obs_std'])
-        acs_norm = normalize(data=acs,
-                             mean=self.buffer_stats['acs_mean'],
-                             std=self.buffer_stats['acs_std'])
+        
+        if not self.disc_actions:
+            acs_norm = normalize(data=acs,
+                                 mean=self.buffer_stats['acs_mean'],
+                                 std=self.buffer_stats['acs_std'])
+        else:
+            acs_norm = acs
 
         # convert to tensors
         lag_obs_norm = from_numpy(self.device, lag_obs_norm)
