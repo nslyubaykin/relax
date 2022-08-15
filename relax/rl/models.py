@@ -37,11 +37,13 @@ class DeltaEnvModel(BaseModel, nn.Module):
                  n_steps_per_update=1,
                  update_freq=1,
                  stats_recalc_freq=1,
-                 weight_decay=0.0, 
+                 weight_decay=0.0,
+                 disc_actions=False,
                  reset_models_freq=None,
                  reset_n_models=0,
                  min_updates_since_reset=0,
                  random_agg=False,
+                 obs_postproc_function=None,
                  obs_nlags=0,
                  obs_concat_axis=-1,
                  obs_expand_axis=None,
@@ -76,6 +78,9 @@ class DeltaEnvModel(BaseModel, nn.Module):
         self.min_updates_since_reset = min_updates_since_reset
         
         self.random_agg = random_agg
+        self.disc_actions = disc_actions
+        
+        self.obs_postproc_function = obs_postproc_function
         
         self.obs_nlags = obs_nlags
         self.obs_concat_axis = obs_concat_axis
@@ -206,7 +211,7 @@ class DeltaEnvModel(BaseModel, nn.Module):
     def update_buffer_stats(self, buffer: ReplayBuffer):
         
         buffer.add_next_obs()
-        obs, next_obs, acs = buffer.unpack(['obs', 'next_obs', 'acs'])
+        obs, next_obs = buffer.unpack(['obs', 'next_obs'])
         lag_obs = handle_lags(data=buffer,
                               fields={'obs': 'lag_concat_obs'},
                               nlags=self.obs_nlags,
@@ -219,11 +224,14 @@ class DeltaEnvModel(BaseModel, nn.Module):
         self.buffer_stats = {
             'lag_obs_mean': np.mean(lag_obs, axis=0),
             'lag_obs_std': np.std(lag_obs, axis=0),
-            'acs_mean': np.mean(acs, axis=0),
-            'acs_std': np.std(acs, axis=0),
             'deltas_mean': np.mean(next_obs - obs, axis=0),
             'deltas_std': np.std(next_obs - obs, axis=0),
         }
+        
+        if not self.disc_actions:
+            acs = buffer.unpack(['acs'])
+            self.buffer_stats['acs_mean'] = np.mean(acs, axis=0)
+            self.buffer_stats['acs_std'] = np.std(acs, axis=0)
 
         if self.rews_models is not None:
             rews = buffer.unpack(['rews'])
@@ -382,6 +390,10 @@ class DeltaEnvModel(BaseModel, nn.Module):
         # aggregate the data from all models
         next_obs = np.mean(next_obs, axis=0)
         
+        # post-process obs if needed
+        if self.obs_postproc_function is not None:
+            next_obs = self.obs_postproc_function(next_obs)
+        
         if self.reward_function is None:
             # if no true reward function provided, use fitted rewards
             rews = np.concatenate(rews, axis=0)
@@ -486,13 +498,18 @@ class DeltaEnvModel(BaseModel, nn.Module):
                     
                     # add noise if needed:
                     noise = self.noise.value(self.global_step)
+                    
                     if noise > 0:
+                        
                         lag_obs = add_noise(data=lag_obs,
                                             mean_data=self.buffer_stats['lag_obs_mean'],
                                             noise=noise)
-                        acs = add_noise(data=acs,
-                                        mean_data=self.buffer_stats['acs_mean'],
-                                        noise=noise)
+                        
+                        if not self.disc_actions:
+                            acs = add_noise(data=acs,
+                                            mean_data=self.buffer_stats['acs_mean'],
+                                            noise=noise)
+                            
                         deltas = add_noise(data=deltas,
                                            mean_data=self.buffer_stats['deltas_mean'],
                                            noise=noise)
@@ -501,9 +518,14 @@ class DeltaEnvModel(BaseModel, nn.Module):
                     lag_obs_norm = normalize(data=lag_obs,
                                              mean=self.buffer_stats['lag_obs_mean'],
                                              std=self.buffer_stats['lag_obs_std'])
-                    acs_norm = normalize(data=acs,
-                                         mean=self.buffer_stats['acs_mean'],
-                                         std=self.buffer_stats['acs_std'])
+                    
+                    if not self.disc_actions:
+                        acs_norm = normalize(data=acs,
+                                             mean=self.buffer_stats['acs_mean'],
+                                             std=self.buffer_stats['acs_std'])
+                    else:
+                        acs_norm = acs
+
                     deltas_norm = normalize(data=deltas,
                                             mean=self.buffer_stats['deltas_mean'],
                                             std=self.buffer_stats['deltas_std'])
