@@ -456,6 +456,7 @@ class DQN(nn.Module,
                  update_freq=1,
                  target_updates_freq=10000,
                  tau=1,
+                 greedy_value=False,
                  # Multistep params
                  n_step_learning=1,
                  # Prioritization params
@@ -493,6 +494,7 @@ class DQN(nn.Module,
         
         # constant params       
         self.double_q = double_q
+        self.greedy_value = greedy_value
         
         self.grad_norm_clipping = grad_norm_clipping
         
@@ -738,9 +740,12 @@ class DQN(nn.Module,
         obs = from_numpy(self.device, obs)
         qa_t_values = self.forward(obs)
         
-        values = torch.gather(qa_t_values, 1, 
-                                  qa_t_values.argmax(1).unsqueeze(1)
-                              ).squeeze(1)
+        if self.greedy_value:
+            values = torch.gather(qa_t_values, 1, 
+                                      qa_t_values.argmax(1).unsqueeze(1)
+                                  ).squeeze(1)
+        else:
+            values = qa_t_values.mean(-1)
         
         return to_numpy(values)
     
@@ -791,6 +796,7 @@ class CategoricalDQN(DQN):
                  update_freq=1,
                  target_updates_freq=10000,
                  tau=1,
+                 greedy_value=False,
                  # Multistep params
                  n_step_learning=1,
                  # Prioritization params
@@ -842,6 +848,7 @@ class CategoricalDQN(DQN):
                          update_freq=update_freq,
                          target_updates_freq=target_updates_freq,
                          tau=tau,
+                         greedy_value=greedy_value,
                          # Multistep params
                          n_step_learning=n_step_learning,
                          # Prioritization params
