@@ -772,8 +772,8 @@ class DQN(nn.Module,
         
     def estimate_advantage(self, paths_or_sample) -> np.ndarray:
         
-        q_values = self.estimate_qvalues(paths_or_sample=paths_or_sample)
-        values = self.estimate_values(paths_or_sample=paths_or_sample)
+        q_values = self.estimate_qvalue(paths_or_sample=paths_or_sample)
+        values = self.estimate_value(paths_or_sample=paths_or_sample)
         
         advantages = q_values - values
         
