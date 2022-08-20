@@ -10,12 +10,17 @@ class VMLP(nn.Module):
     
     def __init__(self, obs_dim, nlayers,
                  nunits, activation=nn.Tanh(),
-                 out_activation=nn.Identity()):
+                 out_activation=nn.Identity(),
+                 pre_process_module=None):
         
         super(VMLP, self).__init__()
         
         layers = []
         in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+        
         for _ in range(nlayers):
             layers.append(nn.Linear(in_size, nunits))
             layers.append(activation)
@@ -34,10 +39,12 @@ class VLSTM(nn.Module):
     def __init__(self, obs_dim, nlayers_lstm,
                  nunits_lstm, nunits_dense,
                  activation=nn.Tanh(),
-                 out_activation=nn.Identity()):
+                 out_activation=nn.Identity(),
+                 pre_process_module=None):
         
         super(VLSTM, self).__init__()
         
+        self.pre_process_module = pre_process_module
         self.lstm = nn.LSTM(obs_dim, nunits_lstm, nlayers_lstm)
         self.dense1 = nn.Linear(nunits_lstm, nunits_dense)
         self.act_dense1 = activation
@@ -46,6 +53,10 @@ class VLSTM(nn.Module):
         
         
     def forward(self, x):
+        
+        if self.pre_process_module is not None:
+            x = self.pre_process_module(x)
+            
         h, _ = self.lstm(x)
         pooled, _ = torch.max(h, 1)
         dense1 = self.dense1(pooled)
@@ -59,12 +70,17 @@ class DiscQMLP(nn.Module):
     
     def __init__(self, obs_dim, acs_dim, nlayers,
                  nunits, activation=nn.ReLU(),
-                 out_activation=nn.Identity()):
+                 out_activation=nn.Identity(),
+                 pre_process_module=None):
         
         super(DiscQMLP, self).__init__()
         
         layers = []
         in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+        
         for _ in range(nlayers):
             layers.append(nn.Linear(in_size, nunits))
             layers.append(activation)
@@ -84,12 +100,17 @@ class DiscNoisyQMLP(nn.Module):
     def __init__(self, obs_dim, acs_dim, nlayers,
                  nunits, activation=nn.ReLU(),
                  out_activation=nn.Identity(),
+                 pre_process_module=None,
                  std_init=0.5):
         
         super(DiscNoisyQMLP, self).__init__()
         
         layers = []
         in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+        
         for _ in range(nlayers):
             layers.append(NoisyLinear(in_size, nunits, std_init=std_init))
             layers.append(activation)
@@ -111,7 +132,8 @@ class DiscDistributionalQMLP(nn.Module):
                  nlayers, nunits, 
                  n_atoms, v_min, v_max,
                  activation=nn.ReLU(),
-                 out_activation=nn.Identity()):
+                 out_activation=nn.Identity(),
+                 pre_process_module=None):
         
         super(DiscDistributionalQMLP, self).__init__()
         
@@ -132,6 +154,10 @@ class DiscDistributionalQMLP(nn.Module):
         
         layers = []
         in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+        
         for _ in range(nlayers):
             layers.append(nn.Linear(in_size, nunits))
             layers.append(activation)
@@ -145,6 +171,72 @@ class DiscDistributionalQMLP(nn.Module):
         out = self.layers(x)
         logits = out.view(-1, self.acs_dim, self.n_atoms)
         log_probs = F.log_softmax(logits, dim=-1)
+        return log_probs
+    
+    
+class DiscDistributionalNoisyDuelingQMLP(nn.Module):
+    
+    def __init__(self, 
+                 obs_dim, acs_dim, 
+                 nlayers, nunits, 
+                 n_atoms, v_min, v_max,
+                 activation=nn.ReLU(),
+                 out_activation=nn.Identity(),
+                 pre_process_module=None,
+                 std_init=0.5):
+        
+        super(DiscDistributionalNoisyDuelingQMLP, self).__init__()
+        
+        # Categorical DQN specific params
+        self.n_atoms = n_atoms
+        self.v_min = v_min
+        self.v_max = v_max
+        self.d_z = (v_max-v_min)/(n_atoms-1)
+        self.register_buffer('support', torch.Tensor(n_atoms))
+        self.support.data.copy_(
+            torch.tensor(
+                [v_min + i*self.d_z for i in range(n_atoms)]
+            )
+        )
+
+        self.acs_dim = acs_dim
+        self.obs_dim = obs_dim
+        
+        layers = []
+        in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+        
+        for _ in range(nlayers):
+            layers.append(NoisyLinear(in_size, nunits, std_init=std_init))
+            layers.append(activation)
+            in_size = nunits
+        
+        self.layers = nn.Sequential(*layers)
+        
+        self.advantages_fc = nn.Sequential(
+            NoisyLinear(in_size, acs_dim * n_atoms, std_init=std_init),
+        )
+        
+        self.values_fc = nn.Sequential(
+            NoisyLinear(in_size, 1 * n_atoms, std_init=std_init),
+        )
+        
+    def forward(self, x: torch.FloatTensor) -> torch.FloatTensor: 
+        
+        features = self.layers(x)
+
+        advantages = self.advantages_fc(features)
+        values = self.values_fc(features)
+
+        advantages = advantages.view(-1, self.acs_dim, self.n_atoms)
+        values = values.view(-1, 1, self.n_atoms)
+
+        logits = values + (advantages - advantages.mean(1, keepdim=True))
+
+        log_probs = F.log_softmax(logits, dim=-1)
+
         return log_probs
 
 
@@ -465,10 +557,12 @@ class ContQMLP(nn.Module):
                  hidden1=400, hidden2=300,
                  activation=nn.ReLU(),
                  out_activation=nn.Identity(),
-                 init_w=3e-3):
+                 init_w=3e-3,
+                 pre_process_module=None):
         
         super(ContQMLP, self).__init__()
         
+        self.pre_process_module = pre_process_module
         self.fc1 = nn.Linear(obs_dim+acs_dim, hidden1)
         self.fc2 = nn.Linear(hidden1, hidden2)
         self.fc3 = nn.Linear(hidden2, 1)
@@ -477,6 +571,9 @@ class ContQMLP(nn.Module):
         self.acs_dim = acs_dim
         
     def forward(self, obs, acs):
+        
+        if self.pre_process_module is not None:
+            obs = self.pre_process_module(obs)
         
         out = self.fc1(
             torch.cat(

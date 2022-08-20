@@ -11,12 +11,17 @@ class CategoricalMLP(nn.Module):
     
     def __init__(self, obs_dim, acs_dim, nlayers,
                  nunits, activation=nn.Tanh(),
-                 out_activation=nn.Identity()):
+                 out_activation=nn.Identity(),
+                 pre_process_module=None):
         
         super(CategoricalMLP, self).__init__()
         
         layers = []
         in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+            
         for _ in range(nlayers):
             layers.append(nn.Linear(in_size, nunits))
             layers.append(activation)
@@ -40,12 +45,17 @@ class NormalMLP(nn.Module):
                  nunits, activation=nn.Tanh(),
                  out_activation=nn.Identity(),
                  acs_scale=1, acs_bias=0,
-                 init_log_std=0.0):
+                 init_log_std=0.0,
+                 pre_process_module=None):
         
         super(NormalMLP, self).__init__()
         
         layers = []
         in_size = obs_dim
+        
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
+            
         for _ in range(nlayers):
             layers.append(nn.Linear(in_size, nunits))
             layers.append(activation)
@@ -83,10 +93,12 @@ class NormalLSTM(nn.Module):
                  nunits_lstm, nunits_dense, activation=nn.Tanh(),
                  out_activation=nn.Identity(),
                  acs_scale=1, acs_bias=0,
-                 init_log_std=0.0):
+                 init_log_std=0.0,
+                 pre_process_module=None):
         
         super(NormalLSTM, self).__init__()
         
+        self.pre_process_module = pre_process_module
         self.lstm = nn.LSTM(obs_dim, nunits_lstm, nlayers_lstm)
         self.dense1 = nn.Linear(nunits_lstm, nunits_dense)
         self.act_dense1 = activation
@@ -101,6 +113,9 @@ class NormalLSTM(nn.Module):
         self.acs_bias = acs_bias   
         
     def forward(self, x):
+        
+        if self.pre_process_module is not None:
+            x = self.pre_process_module(x)
         
         h, _ = self.lstm(x)
         pooled, _ = torch.max(h, 1)
@@ -123,11 +138,14 @@ class DeterministicMLP(nn.Module):
                  hidden1=400, hidden2=300,
                  activation=nn.ReLU(),
                  out_activation=nn.Identity(),
-                 acs_scale=1.0, acs_bias=0.0):
+                 acs_scale=1.0, acs_bias=0.0,
+                 pre_process_module=None):
         
         super(DeterministicMLP, self).__init__()
         
         layers = []
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
         layers.append(nn.Linear(obs_dim, hidden1))
         layers.append(activation)
         layers.append(nn.Linear(hidden1, hidden2))
@@ -154,11 +172,14 @@ class TanhNormalMLP(nn.Module):
                  out_activation=nn.Identity(),
                  init_w=3e-3, 
                  min_log_std=-20, 
-                 max_log_std=2):
+                 max_log_std=2,
+                 pre_process_module=None):
         
         super(TanhNormalMLP, self).__init__()
         
         layers = []
+        if pre_process_module is not None:
+            layers.append(pre_process_module)
         layers.append(nn.Linear(obs_dim, hidden1))
         layers.append(activation)
         layers.append(nn.Linear(hidden1, hidden2))
