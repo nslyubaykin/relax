@@ -26,7 +26,7 @@ class ZerosMask(gym.Wrapper):
     
     def step(self, action):
         
-        # Step an upwrapped environment
+        # Step an unwrapped environment
         obs, reward, done, info = self.env.step(action)
         
         return self._mask_obs(obs), reward, done, info
