@@ -60,7 +60,7 @@ __ReLAx offers a set of special features:__
 
 __And other options for building non-standard RL architectures:__
 
-  - Training PPO with DQN as a critic
+  - [Training PPO with DQN as a critic](https://github.com/nslyubaykin/ppo_with_dqn_critic/blob/master/ppo_dqn.ipynb)
   - Model-based accelerated RAINBOW
   - Model-based initialization for SAC
   - [Multi-tasking with model-based RL](https://github.com/nslyubaykin/mbrl_multitasking/blob/master/mbrl_multitasking.ipynb)
