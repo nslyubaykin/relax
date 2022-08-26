@@ -34,39 +34,3 @@ class ZerosMask(gym.Wrapper):
     def reset(self):
         return self._mask_obs(self.env.reset())
     
-    
-class NormalNoise(gym.Wrapper):
-    
-    """
-    Adds normal noise with `scale` std and `loc` mean to an observation array
-    To simulate partial observability in a controlled manner.
-    """
-    
-    def __init__(self, env, scale, loc=0):
-        
-        gym.Wrapper.__init__(self, env)
-        self.scale = scale
-        self.loc = loc
-        
-    def _add_noise(self, obs):
-        
-        # sample noise according to `scale` and `loc`
-        noise = np.random.normal(scale=self.scale,
-                                 loc=self.loc,
-                                 size=obs.shape)
-        
-        # apply mask
-        noisy_obs = obs + noise
-        
-        return noisy_obs.copy()
-    
-    def step(self, action):
-        
-        # Step an unwrapped environment
-        obs, reward, done, info = self.env.step(action)
-        
-        return self._add_noise(obs), reward, done, info
-    
-    def reset(self):
-        return self._add_noise(self.env.reset())
-    
