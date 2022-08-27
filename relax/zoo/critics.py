@@ -36,7 +36,8 @@ class VMLP(nn.Module):
     
 class VLSTM(nn.Module):
     
-    def __init__(self, obs_dim, nlayers_lstm,
+    def __init__(self, obs_dim, 
+                 seq_len, nlayers_lstm,
                  nunits_lstm, nunits_dense,
                  activation=nn.Tanh(),
                  out_activation=nn.Identity(),
@@ -48,7 +49,8 @@ class VLSTM(nn.Module):
         self.lstm = nn.LSTM(obs_dim, nunits_lstm, nlayers_lstm)
         self.dense1 = nn.Linear(nunits_lstm, nunits_dense)
         self.act_dense1 = activation
-        self.dense_out = nn.Linear(nunits_dense, 1)
+        self.flatten = nn.Flatten()
+        self.dense_out = nn.Linear(nunits_dense * seq_len, 1)
         self.act_out = out_activation
         
         
@@ -58,10 +60,10 @@ class VLSTM(nn.Module):
             x = self.pre_process_module(x)
             
         h, _ = self.lstm(x)
-        pooled, _ = torch.max(h, 1)
-        dense1 = self.dense1(pooled)
+        dense1 = self.dense1(h)
         dense1 = self.act_dense1(dense1)
-        dense_out = self.dense_out(dense1)
+        flatten = self.flatten(dense1)
+        dense_out = self.dense_out(flatten)
         values = self.act_out(dense_out)
         return values
 

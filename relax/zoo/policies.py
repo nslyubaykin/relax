@@ -89,7 +89,8 @@ class NormalMLP(nn.Module):
 
 class NormalLSTM(nn.Module):
     
-    def __init__(self, obs_dim, acs_dim, nlayers_lstm,
+    def __init__(self, obs_dim, acs_dim, 
+                 seq_len, nlayers_lstm,
                  nunits_lstm, nunits_dense, activation=nn.Tanh(),
                  out_activation=nn.Identity(),
                  acs_scale=1, acs_bias=0,
@@ -102,7 +103,8 @@ class NormalLSTM(nn.Module):
         self.lstm = nn.LSTM(obs_dim, nunits_lstm, nlayers_lstm)
         self.dense1 = nn.Linear(nunits_lstm, nunits_dense)
         self.act_dense1 = activation
-        self.dense_out = nn.Linear(nunits_dense, acs_dim)
+        self.flatten = nn.Flatten()
+        self.dense_out = nn.Linear(nunits_dense * seq_len, acs_dim)
         self.act_out = out_activation
         
         self.log_stds = nn.Parameter(
@@ -118,10 +120,10 @@ class NormalLSTM(nn.Module):
             x = self.pre_process_module(x)
         
         h, _ = self.lstm(x)
-        pooled, _ = torch.max(h, 1)
-        dense1 = self.dense1(pooled)
+        dense1 = self.dense1(h)
         dense1 = self.act_dense1(dense1)
-        dense_out = self.dense_out(dense1)
+        flatten = self.flatten(dense1)
+        dense_out = self.dense_out(flatten)
         means = self.act_out(dense_out)
         means = means * self.acs_scale + self.acs_bias
         cov = torch.diag_embed(torch.exp(self.log_stds))
