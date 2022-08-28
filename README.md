@@ -51,17 +51,17 @@ ReLAx library contains implementations of the following algorithms:
 ## Special Features
 __ReLAx offers a set of special features:__
 
-  - Simple interface for lagging environment observations: [Recurrent Policies for Handling Partially Observable Environments](https://github.com/nslyubaykin/rnns_for_pomdp/blob/master/lags_for_pomdp.ipynb)
-  - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo/blob/master/parallel_ppo.ipynb)
-  - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint](https://github.com/nslyubaykin/trpo_schedule_kl/blob/master/trpo_schedule_kl.ipynb)
-  - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion](https://github.com/nslyubaykin/nstep_td3/blob/master/nstep_td3.ipynb)
-  - Support of Prioritized Experience Replay for all off-policy value-based algorithms: [Prioritised DDQN for Atari-2600](https://github.com/nslyubaykin/prioritized_ddqn/blob/master/prioritized_ddqn.ipynb)
-  - Simple interface for model-based acceleration: [DYNA Model-Based Acceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example/blob/master/dyna_q_tutorial.ipynb) / [MBPO with SAC](https://github.com/nslyubaykin/relax_mbpo_example/blob/master/mbpo_tutorial.ipynb)
+  - Simple interface for lagging environment observations: [Recurrent Policies for Handling Partially Observable Environments](https://github.com/nslyubaykin/rnns_for_pomdp)
+  - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo)
+  - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint](https://github.com/nslyubaykin/trpo_schedule_kl)
+  - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion](https://github.com/nslyubaykin/nstep_td3)
+  - Support of Prioritized Experience Replay for all off-policy value-based algorithms: [Prioritised DDQN for Atari-2600](https://github.com/nslyubaykin/prioritized_ddqn)
+  - Simple interface for model-based acceleration: [DYNA Model-Based Acceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example) / [MBPO with SAC](https://github.com/nslyubaykin/relax_mbpo_example)
 
 __And other options for building non-standard RL architectures:__
 
-  - [Training PPO with DQN as a critic](https://github.com/nslyubaykin/ppo_with_dqn_critic/blob/master/ppo_dqn.ipynb)
-  - [Multi-tasking with model-based RL](https://github.com/nslyubaykin/mbrl_multitasking/blob/master/mbrl_multitasking.ipynb)
+  - [Training PPO with DQN as a critic](https://github.com/nslyubaykin/ppo_with_dqn_critic)
+  - [Multi-tasking with model-based RL](https://github.com/nslyubaykin/mbrl_multitasking)
   
 ## Usage With Custom Environments
 Some examples how to use ReLAx with user defined envirionments:
