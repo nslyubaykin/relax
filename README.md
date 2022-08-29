@@ -52,8 +52,8 @@ ReLAx library contains implementations of the following algorithms:
 __ReLAx offers a set of special features:__
 
   - Simple interface for lagging environment observations: [Recurrent Policies for Handling Partially Observable Environments](https://github.com/nslyubaykin/rnns_for_pomdp)
-  - Sampling from parallel envirionments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo)
-  - Wide possibilities for scheduling hyperparameters: [Scheduling TRPO's KL Divergence Constraint](https://github.com/nslyubaykin/trpo_schedule_kl)
+  - Sampling from parallel environments: [Speeding Up PPO with Parallel Sampling](https://github.com/nslyubaykin/parallel_ppo)
+  - Wide possibilities for scheduling hyper-parameters: [Scheduling TRPO's KL Divergence Constraint](https://github.com/nslyubaykin/trpo_schedule_kl)
   - Support of N-step bootstrapping for all off-policy value-based algorithms: [Multistep TD3 for Locomotion](https://github.com/nslyubaykin/nstep_td3)
   - Support of Prioritized Experience Replay for all off-policy value-based algorithms: [Prioritised DDQN for Atari-2600](https://github.com/nslyubaykin/prioritized_ddqn)
   - Simple interface for model-based acceleration: [DYNA Model-Based Acceleration with TD3](https://github.com/nslyubaykin/relax_dyna_q_example) / [MBPO with SAC](https://github.com/nslyubaykin/relax_mbpo_example)
@@ -64,7 +64,7 @@ __And other options for building non-standard RL architectures:__
   - [Multi-tasking with model-based RL](https://github.com/nslyubaykin/mbrl_multitasking)
   
 ## Usage With Custom Environments
-Some examples how to use ReLAx with user defined envirionments:
+Some examples of how to write custom user-defined environments and use them with ReLAx:
 
   - [Playing 2048 with RAINBOW]()
 
@@ -214,7 +214,32 @@ pip install -e .
 ### Mujoco
 
 ```.bash
+mkdir ~/.mujoco
+cd ~/.mujoco
+wget http://www.roboti.us/download/mujoco200_linux.zip
+unzip mujoco200_linux.zip
+mv mujoco200_linux mujoco200
+rm mujoco200_linux.zip
+wget http://www.roboti.us/file/mjkey.txt
 ```
+Then, add the following to bottom of your bashrc: 
+
+```.bash
+export LD_LIBRARY_PATH=~/.mujoco/mujoco200/bin/
+```
+Finally, install mujoco_py itself:
+
+```.bash
+pip install mujoco-py==2.0.2.2
+```
+__!Note:__ very often installation crushes with error: `error: command 'gcc' failed with exit status 1`.
+To debug this run:
+
+```.bash
+sudo apt-get install gcc
+sudo apt-get install build-essential
+```
+And then again try to install `mujoco-py==2.0.2.2`
 
 ### Atari Environments
 
@@ -227,7 +252,7 @@ pip install gym[atari]==0.17.2
 ```
 In case of "ROMs not found" error do the following steps:
 
-1) Download ROMs archieve
+1) Download ROMs archive
 ```.bash
 wget http://www.atarimania.com/roms/Roms.rar
 ```
@@ -255,11 +280,11 @@ In the future the following functionality is planned to be added:
  - IQN
  - Discrete SAC
  - NAF
- - Stochastic envirionment models
+ - Stochastic environment models
  - Improving documentation
 
 ## Known Issues
   
   - Lack of documentation (right now compensated with usage examples)
-  - Filtering & Reward Weigthed Refinement declared performance in paper is not yet reached
-  - DYNA-Q is not campatible with PER as it is not clear which priority to assign to synthetic branched transitions (possible option: same priority as its parent transition)
+  - Filtering & Reward Weighted Refinement declared performance in paper is not yet reached
+  - DYNA-Q is not compatible with PER as it is not clear which priority to assign to synthetic branched transitions (possible option: same priority as its parent transition)
