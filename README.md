@@ -224,7 +224,7 @@ mv mujoco200_linux mujoco200
 rm mujoco200_linux.zip
 wget http://www.roboti.us/file/mjkey.txt
 ```
-Then, add the following to bottom of your bashrc: 
+Then, add the following line to the bottom of your bashrc: 
 
 ```.bash
 export LD_LIBRARY_PATH=~/.mujoco/mujoco200/bin/
