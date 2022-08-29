@@ -66,7 +66,7 @@ __And other options for building non-standard RL architectures:__
 ## Usage With Custom Environments
 Some examples how to use ReLAx with user defined envirionments:
 
-  - Playing 2048 with RAINBOW
+  - [Playing 2048 with RAINBOW]()
 
 ## Minimal Examples
 
