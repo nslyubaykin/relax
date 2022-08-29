@@ -213,6 +213,8 @@ pip install -e .
 
 ### Mujoco
 
+To install Mujoco do the following steps:
+
 ```.bash
 mkdir ~/.mujoco
 cd ~/.mujoco
