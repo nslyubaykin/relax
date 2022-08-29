@@ -549,7 +549,7 @@ class DQN(nn.Module,
     
     def forward_np(self, obs: np.ndarray) -> np.ndarray:
         obs = from_numpy(self.device, obs)
-        return self.forward(obs).cpu().detach().numpy()
+        return self.forward(obs).cpu().detach().numpy().copy()
             
     def update_target_network(self):
         

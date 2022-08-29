@@ -807,7 +807,7 @@ class ArgmaxQValue(BaseActor, metaclass=abc.ABCMeta):
                     acs = self.exploration.get_action(logits=logits)
             else:
                 acs = logits.argmax(-1)
-        return acs
+        return acs.copy()
 
     
 class DDPG(BaseActor,

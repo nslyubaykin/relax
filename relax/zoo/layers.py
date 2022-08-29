@@ -57,12 +57,12 @@ class NoisyLinear(nn.Module):
         epsilon_out = self.scale_noise(self.out_features)
 
         # outer product
-        outer_product = torch.matmul(
-            epsilon_out.unsqueeze(-1), 
-            epsilon_in.unsqueeze(0)
-        )
-        self.weight_epsilon.copy_(outer_product)
-        self.bias_epsilon.copy_(epsilon_out)
+        outer_product = epsilon_out.unsqueeze(-1) * epsilon_in.unsqueeze(0)
+        
+        self.weight_epsilon.copy_(outer_product.clone())
+        self.bias_epsilon.copy_(epsilon_out.clone())
+        
+        del outer_product, epsilon_out, epsilon_in
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward method implementation.
