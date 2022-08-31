@@ -287,7 +287,8 @@ In the future the following functionality is planned to be added:
  - Improving documentation
 
 ## Known Issues
-  
+ 
   - Lack of documentation (right now compensated with usage examples)
+  - On some systems `relax.zoo.layers.NoisyLinear` seems to leak memory. This issue is very unpredictable and yet not fully understood. Sometimes, installing different versions of PyTorch and CUDA may fix it. If the problem persists, as a workaround, consider not using noisy linear layers.
   - Filtering & Reward Weighted Refinement declared performance in paper is not yet reached
   - DYNA-Q is not compatible with PER as it is not clear which priority to assign to synthetic branched transitions (possible option: same priority as its parent transition)
