@@ -280,6 +280,7 @@ In the future the following functionality is planned to be added:
  - PPG
  - QR-DQN
  - IQN
+ - FQF
  - Discrete SAC
  - NAF
  - Stochastic environment models
