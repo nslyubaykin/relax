@@ -20,7 +20,7 @@ class Path:
     And some useful methods for environmet's path
     """
     
-    def __init__(self):
+    def __init__(self, extra_fields=None):
         
         self.data = {
             'obs': [],
@@ -29,6 +29,11 @@ class Path:
             'terminals': [],
             'is_time_limit': [],
         }
+        
+        # add some extra fields
+        if extra_fields is not None:
+            for ef in extra_fields:
+                self.data[ef] = []
         
         self.steps = 0
         self.has_start = None
@@ -412,7 +417,7 @@ class PathList:
         return out
         
     def copy(self):
-    	return deepcopy(self)
+        return deepcopy(self)
     
     def n_paths(self):
         return len(self.rollouts)
@@ -620,7 +625,8 @@ class Sampler:
                  obs_nlags=0,
                  obs_concat_axis=-1,
                  obs_expand_axis=None,
-                 obs_padding='first'):
+                 obs_padding='first',
+                 info_parse=None):
         
         # wrapping envirionment and saving actor lag profile
         self.env = env
@@ -631,11 +637,14 @@ class Sampler:
         self.obs_buffer = []
         self.samples_made = 0
         
+        # Info parsing
+        self.info_parse = info_parse
+        
         # actor exploration state
         self.actor_exploration_state = None
         
         # initialising iterational outputs
-        self.last_path = Path()
+        self.last_path = Path(extra_fields=self.info_parse)
         self.last_path.has_start = True
         self.last_pathlist = PathList()
         
@@ -657,7 +666,7 @@ class Sampler:
         self.last_pathlist.n_transitions += self.last_path.steps
         
         # Reset last pathlist
-        self.last_path = Path()
+        self.last_path = Path(extra_fields=self.info_parse)
         
         # mark whether it has a start;
         self.last_path.has_start = self.last_ob is None
@@ -796,6 +805,11 @@ class Sampler:
             self.last_path.data['acs'].append(ac)
             self.last_path.data['terminals'].append(done) # not rollout_done as before
             
+            # parsing info
+            if self.info_parse is not None:
+                for ip in self.info_parse:
+                    self.last_path.data[ip].append(info[ip])
+            
             # handling time limit
             if info_time_limit_key in info.keys():
                 tlimit = info[info_time_limit_key]
@@ -804,6 +818,7 @@ class Sampler:
             self.last_path.data['is_time_limit'].append(tlimit)
             
             self.last_path.steps += 1
+            
             # Mark whether the path is completed in environment
             self.last_path.has_end = done
 
@@ -887,6 +902,11 @@ class Sampler:
                 self.last_path.data['acs'].append(ac)
                 self.last_path.data['terminals'].append(done) # not rollout_done as before
                 
+                # parsing info
+                if self.info_parse is not None:
+                    for ip in self.info_parse:
+                        self.last_path.data[ip].append(info[ip])
+                
                 # handling time limit
                 if info_time_limit_key in info.keys():
                     tlimit = info[info_time_limit_key]
@@ -895,6 +915,7 @@ class Sampler:
                 self.last_path.data['is_time_limit'].append(tlimit)
                 
                 self.last_path.steps += 1
+                
                 # Mark whether the path is completed in environment
                 self.last_path.has_end = done
 
@@ -937,7 +958,8 @@ class ParallelSampler:
                  obs_concat_axis=-1,
                  obs_expand_axis=None,
                  obs_padding='first', 
-                 gpus_share=0.5):
+                 gpus_share=0.5,
+                 info_parse=None):
         
         if not isinstance(env, list):
             raise ValueError(
@@ -966,7 +988,8 @@ class ParallelSampler:
                                      obs_nlags=obs_nlags,
                                      obs_concat_axis=obs_concat_axis,
                                      obs_expand_axis=obs_expand_axis,
-                                     obs_padding=obs_padding)
+                                     obs_padding=obs_padding,
+                                     info_parse=info_parse)
             )
 
     def get_samples_made(self):
