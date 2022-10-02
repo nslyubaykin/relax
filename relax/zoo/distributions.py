@@ -7,6 +7,8 @@ from torch.distributions.transformed_distribution import TransformedDistribution
 
 
 class TanhUnivariateNormal(TransformedDistribution):
+
+    arg_constraints = {}
     
     def __init__(self, loc, log_scale,
                  acs_scale=1, acs_bias=0,
@@ -46,6 +48,8 @@ class TanhUnivariateNormal(TransformedDistribution):
     
     
 class TanhNormal(Distribution):
+
+    arg_constraints = {}
     
     def __init__(self, loc, log_scale,
                  acs_scale=1, acs_bias=0,
