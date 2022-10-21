@@ -469,6 +469,8 @@ class RND(Checkpointer,
                 self.int_rews_buffer = self.int_rews_buffer[-self.int_rews_history:]
 
             self.n_updates += 1
+            
+            self.local_step += 1
 
             # logging
             pr = type(self).__name__
@@ -479,8 +481,6 @@ class RND(Checkpointer,
                               f'{pr}_local_step': self.local_step,
                               f'{pr}_n_updates': self.n_updates,
                               f'{pr}_n_stats_updates': self.n_stats_updates}
-                
-            self.local_step += 1
 
         # update intristic rewards stats
         self.update_int_rew_std()
