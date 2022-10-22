@@ -154,7 +154,7 @@ class Baseline(BaseCritic):
         
             # normalize Q values and convert them to tensor
             targets = normalize(q_values, q_values.mean(), q_values.std())
-            obs, targets = from_numpy(self.device, obs), from_numpy(self.device, targets)
+            obs, targets = from_numpy(torch.device('cpu'), obs), from_numpy(torch.device('cpu'), targets)
             
             dataloader = DataLoader(
                 list(zip(obs,
@@ -169,6 +169,9 @@ class Baseline(BaseCritic):
                 mean_loss = []
                 
                 for obs_i, targets_i in dataloader:
+                    
+                    obs_i = obs_i.to(self.device)
+                    targets_i = targets_i.to(self.device)
 
                     # obtain baselines fit
                     baseline_fit = torch.squeeze(self.forward(obs_i))
@@ -286,13 +289,52 @@ class GAE(Baseline):
         # unpack rollouts for training
         rews, q_values = paths.unpack(['rews', 'rews_to_go'])   
         
-        # predict baselines with critic net 
-        baselines_normalized = self.forward_np(obs).squeeze()
+        batch_size = self.batch_size.value(self.global_step)
+        
+        if batch_size >= obs.shape[0]:
+            
+            # single forward pass
+            # predict baselines with critic net 
+            baselines_normalized = self.forward_np(obs).squeeze()
+
+            # predict baselines t+1 with critic net 
+            baselines_normalized_next = self.forward_np(next_obs).squeeze()
+            
+        else:
+            
+            # predict in batches
+            baselines_normalized, baselines_normalized_next = [], []
+            
+            obs = from_numpy(torch.device('cpu'), obs)
+            next_obs = from_numpy(torch.device('cpu'), next_obs)
+            
+            dataloader = DataLoader(
+                list(zip(obs, next_obs)), 
+                batch_size=batch_size,
+                shuffle=False,
+                num_workers=0
+            )
+            
+            for obs_i, next_obs_i in dataloader:
+                
+                obs_i = obs_i.to(self.device)
+                next_obs_i = next_obs_i.to(self.device)
+                
+                baselines_normalized_i = self.forward(obs_i)
+                baselines_normalized_next_i = self.forward(next_obs_i)
+                
+                baselines_normalized_i = to_numpy(baselines_normalized_i)
+                baselines_normalized_next_i = to_numpy(baselines_normalized_next_i)
+                
+                baselines_normalized.append(baselines_normalized_i)
+                baselines_normalized_next.append(baselines_normalized_next_i)
+                
+            baselines_normalized = np.concatenate(baselines_normalized, axis=0).squeeze()
+            baselines_normalized_next = np.concatenate(baselines_normalized_next, axis=0).squeeze()
+        
         # unnormalize baselines to match Q values distribution
         baselines = unnormalize(baselines_normalized, q_values.mean(), q_values.std())
         
-        # predict baselines t+1 with critic net 
-        baselines_normalized_next = self.forward_np(next_obs).squeeze()
         # unnormalize baselines to match Q values distribution
         baselines_next = unnormalize(baselines_normalized_next, q_values.mean(), q_values.std())
         

@@ -640,7 +640,6 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
         acs = from_numpy(torch.device('cpu'), acs)
         advantages = from_numpy(torch.device('cpu'), advantages)
         
-            
         # evaluate old policy logprob
         logprob_loader = DataLoader(
             list(zip(obs, acs)), 
