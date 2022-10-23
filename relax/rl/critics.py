@@ -287,7 +287,7 @@ class GAE(Baseline):
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
-        rews, q_values = paths.unpack(['rews', 'rews_to_go'])   
+        rews, q_values, terminals = paths.unpack(['rews', 'rews_to_go', 'terminals'])   
         
         batch_size = self.batch_size.value(self.global_step)
         
@@ -342,7 +342,8 @@ class GAE(Baseline):
         assert baselines.shape == rews.shape and baselines_next.shape == rews.shape
         
         # estimate GAE lambda deltas
-        deltas = rews + self.gamma.value(self.global_step) * baselines_next - baselines
+        gamma = self.gamma.value(self.global_step)
+        deltas = rews + gamma * baselines_next * np.logical_not(terminals) - baselines
         
         # pack deltas to paths:
         paths.pack(deltas.tolist(), 'deltas')
