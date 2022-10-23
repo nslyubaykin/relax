@@ -212,7 +212,7 @@ class RND(Checkpointer,
         self.n_stats_updates = 0
         self.n_model_resets = 0
         self.ckpt_attrs = ['global_step', 'local_step', 'n_updates', 'n_stats_updates',
-                           'buffer_stats']
+                           'buffer_stats', 'int_rews_std']
         self.obs_norm_clip = obs_norm_clip
         
         self.learning_rate = init_schedule(learning_rate)
