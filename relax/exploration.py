@@ -346,9 +346,34 @@ class RND(Checkpointer,
         lag_obs_norm = self._prepare_obs(data=data,
                                          next_obs=True)
         
-        # get discillation error and detach it
-        pred_error = self.forward(lag_obs_norm).detach()
+        batch_size = self.batch_size.value(self.global_step)
         
+        if batch_size >= lag_obs_norm.shape[0]:
+            
+            # single forward pass
+            # get discillation error and detach it
+            pred_error = self.forward(lag_obs_norm).detach()
+            
+        else:
+            
+            # predict in batches
+            pred_error = []
+            
+            dataloader = DataLoader(
+                lag_obs_norm, 
+                batch_size=batch_size,
+                shuffle=False,
+                num_workers=0
+            )
+            
+            for lag_obs_norm_i in dataloader:
+                
+                pred_error_i = self.forward(lag_obs_norm_i).detach()
+                
+                pred_error.append(pred_error_i)
+                
+            pred_error = torch.cat(pred_error, dim=0)
+            
         # Standardize intristic rewards
         if self.int_rews_std is None:
             raise RuntimeError('Intristic reward std is not yet calculated')

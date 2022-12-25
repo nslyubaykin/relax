@@ -106,6 +106,11 @@ class Baseline(BaseCritic):
                  gamma,
                  n_target_updates=1, 
                  n_steps_per_update=1,
+                 # Curiosity Parameters
+                 curiosity=None,
+                 weight_i=0,
+                 weight_e=1
+                 # Lags Parameters
                  obs_nlags=0,
                  obs_concat_axis=-1,
                  obs_expand_axis=None,
@@ -123,6 +128,9 @@ class Baseline(BaseCritic):
                          obs_padding)
         
         self.batch_size = init_schedule(batch_size, discrete=True)
+        self.weight_i = init_schedule(weight_i)
+        self.weight_e = init_schedule(weight_e)
+        self.curiosity = curiosity
     
     def update(self, paths: PathList) -> dict:
         
@@ -135,9 +143,28 @@ class Baseline(BaseCritic):
                           expand_axis=self.obs_expand_axis,
                           padding=self.obs_padding)
         
+        # estimate novelties if needed:
+        rews_key = 'rews'
+        if self.curiosity is not None and self.weight_i.value(global_step) > 0:
+            
+            # retreive environment reward
+            rews = paths.unpack(['rews'])
+            
+            # estimate novelty bonus
+            novelties = self.curiosity.estimate_novelty(data=paths)
+            
+            # combine reward streams
+            weight_i = self.weight_i.value(global_step)
+            weight_e = self.weight_e.value(global_step)
+            combined_rews = weight_i * novelties + weight_e * rews
+            
+            # pack them to rollouts
+            paths.pack(combined_rews.tolist(), 'combined_rews')
+            rews_key = 'combined_rews'
+        
         # estimate Q-values if needed
         if 'rews_to_go' not in paths.rollouts[0].data.keys():
-            paths.add_disc_cumsum('rews_to_go', 'rews',
+            paths.add_disc_cumsum('rews_to_go', rews_key,
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
@@ -145,8 +172,8 @@ class Baseline(BaseCritic):
         
         if self.n_target_updates.value(self.global_step) > 1:
             
-            warn(f'For {type(self).__name__} n_target_updates greater than 1 is invalid, setting back to 1',
-                 UserWarning)
+            warn(f'For {type(self).__name__} n_target_updates greater than 1 is invalid, '
+                 'setting back to 1', UserWarning)
             
             self.n_target_updates = init_schedule(1, discrete=True)
         
@@ -213,10 +240,29 @@ class Baseline(BaseCritic):
                           expand_axis=self.obs_expand_axis,
                           padding=self.obs_padding)
         
+        # estimate novelties if needed:
+        rews_key = 'rews'
+        if self.curiosity is not None and self.weight_i.value(global_step) > 0:
+            
+            # retreive environment reward
+            rews = paths.unpack(['rews'])
+            
+            # estimate novelty bonus
+            novelties = self.curiosity.estimate_novelty(data=paths)
+            
+            # combine reward streams
+            weight_i = self.weight_i.value(global_step)
+            weight_e = self.weight_e.value(global_step)
+            combined_rews = weight_i * novelties + weight_e * rews
+            
+            # pack them to rollouts
+            paths.pack(combined_rews.tolist(), 'combined_rews')
+            rews_key = 'combined_rews'
+        
         # estimate Q-values if needed
         if 'rews_to_go' not in paths.rollouts[0].data.keys():
-                paths.add_disc_cumsum('rews_to_go', 'rews',
-                                      self.gamma.value(self.global_step))
+            paths.add_disc_cumsum('rews_to_go', rews_key,
+                                  self.gamma.value(self.global_step))
         
         # unpack rollouts for training
         q_values = paths.unpack(['rews_to_go'])
