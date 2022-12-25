@@ -152,6 +152,7 @@ class Baseline(BaseCritic):
             
             # estimate novelty bonus
             novelties = self.curiosity.estimate_novelty(data=paths)
+            novelties = to_numpy(novelties)
             
             # combine reward streams
             weight_i = self.weight_i.value(global_step)
@@ -249,6 +250,7 @@ class Baseline(BaseCritic):
             
             # estimate novelty bonus
             novelties = self.curiosity.estimate_novelty(data=paths)
+            novelties = to_numpy(novelties)
             
             # combine reward streams
             weight_i = self.weight_i.value(global_step)
