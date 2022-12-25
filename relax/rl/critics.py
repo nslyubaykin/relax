@@ -295,6 +295,11 @@ class GAE(Baseline):
                  gae_lambda,
                  n_target_updates=1, 
                  n_steps_per_update=20,
+                 # Curiosity Parameters
+                 curiosity=None,
+                 weight_i=0,
+                 weight_e=1
+                 # Lags Parameters
                  obs_nlags=0,
                  obs_concat_axis=-1,
                  obs_expand_axis=None,
@@ -307,6 +312,9 @@ class GAE(Baseline):
                          gamma,
                          n_target_updates, 
                          n_steps_per_update,
+                         curiosity,
+                         weight_i,
+                         weight_e,
                          obs_nlags,
                          obs_concat_axis,
                          obs_expand_axis,
@@ -329,9 +337,29 @@ class GAE(Baseline):
                                     expand_axis=self.obs_expand_axis,
                                     padding=self.obs_padding)
         
+        # estimate novelties if needed:
+        rews_key = 'rews'
+        if self.curiosity is not None and self.weight_i.value(global_step) > 0:
+            
+            # retreive environment reward
+            rews = paths.unpack(['rews'])
+            
+            # estimate novelty bonus
+            novelties = self.curiosity.estimate_novelty(data=paths)
+            novelties = to_numpy(novelties)
+            
+            # combine reward streams
+            weight_i = self.weight_i.value(global_step)
+            weight_e = self.weight_e.value(global_step)
+            combined_rews = weight_i * novelties + weight_e * rews
+            
+            # pack them to rollouts
+            paths.pack(combined_rews.tolist(), 'combined_rews')
+            rews_key = 'combined_rews'
+        
         # estimate Q-values if needed
         if 'rews_to_go' not in paths.rollouts[0].data.keys():
-            paths.add_disc_cumsum('rews_to_go', 'rews',
+            paths.add_disc_cumsum('rews_to_go', rews_key,
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
