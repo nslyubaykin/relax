@@ -375,11 +375,13 @@ class RND(Checkpointer,
             pred_error = torch.cat(pred_error, dim=0)
             
         # Standardize intristic rewards
-        if self.int_rews_std is None:
-            raise RuntimeError('Intristic reward std is not yet calculated')
-        
-        pred_error /= self.int_rews_std
-        
+        # if first global step - just use current stats for normalization
+        # otherwise use pre-clalculated stats
+        if self.global_step == 0 and self.int_rews_std is None:
+            pred_error /= pred_error.std()
+        else:
+            pred_error /= self.int_rews_std
+            
         return pred_error
         
     def update(self, data: (PathList, ReplayBuffer)) -> dict:
@@ -423,9 +425,16 @@ class RND(Checkpointer,
             data.drop_field('next_obs')
         
         # normalize observations for training
-        lag_obs_norm = normalize(data=lag_obs,
-                                 mean=self.buffer_stats['lag_obs_mean'],
-                                 std=self.buffer_stats['lag_obs_std'])
+        # if first global step - just use current stats for normalization
+        # otherwise use pre-clalculated stats
+        if self.global_step == 0 and len(self.buffer_stats) == 0:
+            lag_obs_norm = normalize(data=lag_obs,
+                                     mean=np.mean(lag_obs, axis=0),
+                                     std=np.std(lag_obs, axis=0))
+        else:
+            lag_obs_norm = normalize(data=lag_obs,
+                                     mean=self.buffer_stats['lag_obs_mean'],
+                                     std=self.buffer_stats['lag_obs_std'])
 
         # clip obs
         clip_val = abs(self.obs_norm_clip)

@@ -145,7 +145,7 @@ class Baseline(BaseCritic):
         
         # estimate novelties if needed:
         rews_key = 'rews'
-        if self.curiosity is not None and self.weight_i.value(global_step) > 0:
+        if self.curiosity is not None and self.weight_i.value(self.global_step) > 0:
             
             # retreive environment reward
             rews = paths.unpack(['rews'])
@@ -155,8 +155,8 @@ class Baseline(BaseCritic):
             novelties = to_numpy(novelties)
             
             # combine reward streams
-            weight_i = self.weight_i.value(global_step)
-            weight_e = self.weight_e.value(global_step)
+            weight_i = self.weight_i.value(self.global_step)
+            weight_e = self.weight_e.value(self.global_step)
             combined_rews = weight_i * novelties + weight_e * rews
             
             # pack them to rollouts
@@ -243,7 +243,7 @@ class Baseline(BaseCritic):
         
         # estimate novelties if needed:
         rews_key = 'rews'
-        if self.curiosity is not None and self.weight_i.value(global_step) > 0:
+        if self.curiosity is not None and self.weight_i.value(self.global_step) > 0:
             
             # retreive environment reward
             rews = paths.unpack(['rews'])
@@ -253,8 +253,8 @@ class Baseline(BaseCritic):
             novelties = to_numpy(novelties)
             
             # combine reward streams
-            weight_i = self.weight_i.value(global_step)
-            weight_e = self.weight_e.value(global_step)
+            weight_i = self.weight_i.value(self.global_step)
+            weight_e = self.weight_e.value(self.global_step)
             combined_rews = weight_i * novelties + weight_e * rews
             
             # pack them to rollouts
@@ -339,7 +339,7 @@ class GAE(Baseline):
         
         # estimate novelties if needed:
         rews_key = 'rews'
-        if self.curiosity is not None and self.weight_i.value(global_step) > 0:
+        if self.curiosity is not None and self.weight_i.value(self.global_step) > 0:
             
             # retreive environment reward
             rews = paths.unpack(['rews'])
@@ -349,8 +349,8 @@ class GAE(Baseline):
             novelties = to_numpy(novelties)
             
             # combine reward streams
-            weight_i = self.weight_i.value(global_step)
-            weight_e = self.weight_e.value(global_step)
+            weight_i = self.weight_i.value(self.global_step)
+            weight_e = self.weight_e.value(self.global_step)
             combined_rews = weight_i * novelties + weight_e * rews
             
             # pack them to rollouts
