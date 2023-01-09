@@ -109,7 +109,7 @@ class Baseline(BaseCritic):
                  # Curiosity Parameters
                  curiosity=None,
                  weight_i=0,
-                 weight_e=1
+                 weight_e=1,
                  # Lags Parameters
                  obs_nlags=0,
                  obs_concat_axis=-1,
@@ -298,7 +298,7 @@ class GAE(Baseline):
                  # Curiosity Parameters
                  curiosity=None,
                  weight_i=0,
-                 weight_e=1
+                 weight_e=1,
                  # Lags Parameters
                  obs_nlags=0,
                  obs_concat_axis=-1,
