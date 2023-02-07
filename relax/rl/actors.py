@@ -513,6 +513,9 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
                  gamma=0.99,
                  standardize_advantages=True,
                  weight_decay=0.0,
+                 # RND params
+                 weight_i=0,
+                 weight_e=1,
                  obs_nlags=0,
                  obs_concat_axis=-1,
                  obs_expand_axis=None,
@@ -534,6 +537,8 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
         self.target_kl = init_schedule(target_kl)
         self.ent_coef = init_schedule(ent_coef)
         self.eps = init_schedule(np.abs(eps))
+        self.weight_i = init_schedule(weight_i)
+        self.weight_e = init_schedule(weight_e)
         
         self.n_epochs_per_update = init_schedule(n_epochs_per_update, discrete=True)
         self.batch_size = init_schedule(batch_size, discrete=True)
@@ -561,6 +566,7 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
         
         # other params
         self.critic = None
+        self.exp_critic = None
         self.last_logs = {}
     
     def forward(self, obs: torch.FloatTensor) -> torch.distributions.distribution.Distribution:
@@ -568,6 +574,11 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
         
     def set_critic(self, critic):
         self.critic = critic
+        
+    def set_exploration_critic(self, critic):
+        self.exp_critic = critic
+        if self.exp_critic is not None:
+            self.exp_critic.exp_pr = 'Exploration'
                        
     def set_device(self, device):
         self.device = device
@@ -631,6 +642,16 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
                 paths.add_disc_cumsum('rews_to_go', 'rews',
                                       self.gamma.value(self.global_step))
             advantages = paths.unpack(['rews_to_go'])
+            
+        # add intristic advantages if needed
+        if self.exp_critic is not None and self.weight_i.value(self.global_step) > 0:
+            
+            advantages_i = self.critic.estimate_advantage(paths)
+            
+            # combine advantages streams
+            weight_i = self.weight_i.value(self.global_step)
+            weight_e = self.weight_e.value(self.global_step)
+            advantages = weight_i * advantages_i + weight_e * advantages
         
         # standardize advantages for stability    
         if self.standardize_advantages:

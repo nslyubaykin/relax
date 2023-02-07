@@ -264,6 +264,7 @@ class RND(Checkpointer,
         # Intristic rewards section
         self.int_rews_history = int_rews_history
         self.int_rews_buffer = []
+        self.int_rews_mean = None
         self.int_rews_std = None
         
     def schedules_step(self):
@@ -273,8 +274,9 @@ class RND(Checkpointer,
                 warnings.simplefilter("ignore")
                 self.scheduler.step()
                 
-    def update_int_rew_std(self):
+    def update_int_rew_stats(self):
         self.int_rews_std = np.std(self.int_rews_buffer)
+        self.int_rews_mean = np.mean(self.int_rews_buffer)
             
     def update_buffer_stats(self, data: (ReplayBuffer, PathList)):
         
@@ -378,8 +380,10 @@ class RND(Checkpointer,
         # if first global step - just use current stats for normalization
         # otherwise use pre-clalculated stats
         if self.global_step == 0 and self.int_rews_std is None:
+            #pred_error -= pred_error.mean() # Changed
             pred_error /= pred_error.std()
         else:
+            #pred_error -= self.int_rews_mean # Changed
             pred_error /= self.int_rews_std
             
         return pred_error
@@ -517,7 +521,7 @@ class RND(Checkpointer,
                               f'{pr}_n_stats_updates': self.n_stats_updates}
 
         # update intristic rewards stats
-        self.update_int_rew_std()
+        self.update_int_rew_stats()
         
         # global step for schedules
         self.schedules_step()
@@ -580,7 +584,7 @@ class RND(Checkpointer,
                 or self.local_step % self.stats_recalc_freq.value(self.global_step) == 0):
                 
                 if len(self.int_rews_buffer) > 0:
-                    self.update_int_rew_std()
+                    self.update_int_rew_stats()
             
             self.local_step += 1
         

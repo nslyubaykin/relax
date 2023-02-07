@@ -62,6 +62,7 @@ class BaseCritic(nn.Module, Checkpointer, metaclass=abc.ABCMeta):
         self.obs_padding = obs_padding
         
         # other params
+        self.exp_pr = None
         self.last_logs = {}
         
     def forward(self, obs: torch.FloatTensor) -> torch.FloatTensor:
@@ -145,6 +146,7 @@ class Baseline(BaseCritic):
         
         # estimate novelties if needed:
         rews_key = 'rews'
+        rews_to_go_key = 'rews_to_go'
         if self.curiosity is not None and self.weight_i.value(self.global_step) > 0:
             
             # retreive environment reward
@@ -162,14 +164,15 @@ class Baseline(BaseCritic):
             # pack them to rollouts
             paths.pack(combined_rews.tolist(), 'combined_rews')
             rews_key = 'combined_rews'
+            rews_to_go_key = 'combined_rews_to_go'
         
         # estimate Q-values if needed
-        if 'rews_to_go' not in paths.rollouts[0].data.keys():
-            paths.add_disc_cumsum('rews_to_go', rews_key,
+        if rews_to_go_key not in paths.rollouts[0].data.keys():
+            paths.add_disc_cumsum(rews_to_go_key, rews_key,
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
-        q_values = paths.unpack(['rews_to_go'])
+        q_values = paths.unpack([rews_to_go_key])
         
         if self.n_target_updates.value(self.global_step) > 1:
             
@@ -219,6 +222,9 @@ class Baseline(BaseCritic):
                 self.n_updates += 1
         
         pr = type(self).__name__
+        if self.exp_pr is not None:
+            pr = f'{self.exp_pr}_{pr}'
+            
         self.last_logs = {f'{pr}_critic_loss':  np.mean(mean_loss),
                           f'{pr}_global_step': self.global_step,
                           f'{pr}_n_updates': self.n_updates,
@@ -243,6 +249,7 @@ class Baseline(BaseCritic):
         
         # estimate novelties if needed:
         rews_key = 'rews'
+        rews_to_go_key = 'rews_to_go'
         if self.curiosity is not None and self.weight_i.value(self.global_step) > 0:
             
             # retreive environment reward
@@ -260,10 +267,11 @@ class Baseline(BaseCritic):
             # pack them to rollouts
             paths.pack(combined_rews.tolist(), 'combined_rews')
             rews_key = 'combined_rews'
+            rews_to_go_key = 'combined_rews_to_go'
         
         # estimate Q-values if needed
-        if 'rews_to_go' not in paths.rollouts[0].data.keys():
-            paths.add_disc_cumsum('rews_to_go', rews_key,
+        if rews_to_go_key not in paths.rollouts[0].data.keys():
+            paths.add_disc_cumsum(rews_to_go_key, rews_key,
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
@@ -339,6 +347,7 @@ class GAE(Baseline):
         
         # estimate novelties if needed:
         rews_key = 'rews'
+        rews_to_go_key = 'rews_to_go'
         if self.curiosity is not None and self.weight_i.value(self.global_step) > 0:
             
             # retreive environment reward
@@ -356,10 +365,11 @@ class GAE(Baseline):
             # pack them to rollouts
             paths.pack(combined_rews.tolist(), 'combined_rews')
             rews_key = 'combined_rews'
+            rews_to_go_key = 'combined_rews_to_go'
         
         # estimate Q-values if needed
-        if 'rews_to_go' not in paths.rollouts[0].data.keys():
-            paths.add_disc_cumsum('rews_to_go', rews_key,
+        if rews_to_go_key not in paths.rollouts[0].data.keys():
+            paths.add_disc_cumsum(rews_to_go_key, rews_key,
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
