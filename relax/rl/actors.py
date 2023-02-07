@@ -646,7 +646,7 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
         # add intristic advantages if needed
         if self.exp_critic is not None and self.weight_i.value(self.global_step) > 0:
             
-            advantages_i = self.critic.estimate_advantage(paths)
+            advantages_i = self.exp_critic.estimate_advantage(paths)
             
             # combine advantages streams
             weight_i = self.weight_i.value(self.global_step)
