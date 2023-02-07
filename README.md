@@ -275,7 +275,7 @@ python -m atari_py.import_roms ROMS
 In the future the following functionality is planned to be added:
 
  - Curiosity (RND)
- - Offline RL (CQL, BEAR, BCQ)
+ - Offline RL (CQL, BEAR, BCQ, SAC-N, EDAC)
  - Decision Transformers
  - PPG
  - QR-DQN
