@@ -718,7 +718,10 @@ class PPO(BaseActor, nn.Module, metaclass=abc.ABCMeta):
                 self.optimizer.zero_grad()
                 loss.backward()
                 if self.grad_norm_clipping is not None:
-                    torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), self.grad_norm_clipping)
+                    torch.nn.utils.clip_grad_value_(
+                        self.policy_net.parameters(), 
+                        self.grad_norm_clipping
+                    )
                 self.optimizer.step()
 
                 # log values

@@ -185,7 +185,8 @@ class Baseline(BaseCritic):
         
             # normalize Q values and convert them to tensor
             targets = normalize(q_values, q_values.mean(), q_values.std())
-            obs, targets = from_numpy(torch.device('cpu'), obs), from_numpy(torch.device('cpu'), targets)
+            cpu_device = torch.device('cpu')
+            obs, targets = from_numpy(cpu_device, obs), from_numpy(cpu_device, targets)
             
             dataloader = DataLoader(
                 list(zip(obs,
@@ -275,7 +276,7 @@ class Baseline(BaseCritic):
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
-        q_values = paths.unpack(['rews_to_go'])
+        q_values = paths.unpack([rews_to_go_key])
         
         # predict baselines with critic net 
         baselines_normalized = self.forward_np(obs).squeeze()
@@ -373,7 +374,7 @@ class GAE(Baseline):
                                   self.gamma.value(self.global_step))
         
         # unpack rollouts for training
-        rews, q_values, terminals = paths.unpack(['rews', 'rews_to_go', 'terminals'])   
+        rews, q_values, terminals = paths.unpack([rews_key, rews_to_go_key, 'terminals'])   
         
         batch_size = self.batch_size.value(self.global_step)
         
@@ -436,7 +437,7 @@ class GAE(Baseline):
         
         # estimate gamma and lambda discounted deltas
         paths.add_disc_cumsum('deltas_to_go', 'deltas',
-                              self.gamma.value(self.global_step) * self.gae_lambda.value(self.global_step))
+                              gamma*self.gae_lambda.value(self.global_step))
         
         advantages = paths.unpack(['deltas_to_go'])
         
