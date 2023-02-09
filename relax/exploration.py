@@ -191,6 +191,7 @@ class RND(Checkpointer,
                  obs_norm_clip=5,
                  # reward normalization history
                  int_rews_history=100000,
+                 std_eps=1e-3,
                  # obs normalization for off-policy algs
                  stats_recalc_freq=1,
                  buffer_stats_sample=25000,
@@ -212,7 +213,7 @@ class RND(Checkpointer,
         self.n_stats_updates = 0
         self.n_model_resets = 0
         self.ckpt_attrs = ['global_step', 'local_step', 'n_updates', 'n_stats_updates',
-                           'buffer_stats', 'int_rews_std']
+                           'buffer_stats', 'int_rews_std', 'int_rews_mean']
         self.obs_norm_clip = obs_norm_clip
         
         self.learning_rate = init_schedule(learning_rate)
@@ -264,6 +265,7 @@ class RND(Checkpointer,
         # Intristic rewards section
         self.int_rews_history = int_rews_history
         self.int_rews_buffer = []
+        self.std_eps = std_eps
         self.int_rews_mean = None
         self.int_rews_std = None
         
@@ -381,10 +383,10 @@ class RND(Checkpointer,
         # otherwise use pre-clalculated stats
         if self.global_step == 0 and self.int_rews_std is None:
             #pred_error -= pred_error.mean() # Changed
-            pred_error /= pred_error.std()
+            pred_error /= (pred_error.std() + self.std_eps)
         else:
             #pred_error -= self.int_rews_mean # Changed
-            pred_error /= self.int_rews_std
+            pred_error /= (self.int_rews_std + self.std_eps)
             
         return pred_error
         
@@ -514,6 +516,8 @@ class RND(Checkpointer,
             pr = type(self).__name__
             self.last_logs = {f'{pr}_learning_rate': self.optimizer.param_groups[0]['lr'],
                               f'{pr}_loss': np.mean(mean_loss),
+                              f'{pr}_int_rews_mean': self.int_rews_mean if self.int_rews_mean is not None else np.nan,
+                              f'{pr}_int_rews_std': self.int_rews_std if self.int_rews_std is not None else np.nan,
                               f'{pr}_batch_size': batch_size,
                               f'{pr}_global_step': self.global_step,
                               f'{pr}_local_step': self.local_step,
@@ -573,6 +577,8 @@ class RND(Checkpointer,
                 pr = type(self).__name__
                 self.last_logs = {f'{pr}_learning_rate': self.optimizer.param_groups[0]['lr'],
                                   f'{pr}_loss': loss.item(),
+                                  f'{pr}_int_rews_mean': self.int_rews_mean if self.int_rews_mean is not None else np.nan,
+                                  f'{pr}_int_rews_std': self.int_rews_std if self.int_rews_std is not None else np.nan,
                                   f'{pr}_batch_size': batch_size,
                                   f'{pr}_global_step': self.global_step,
                                   f'{pr}_local_step': self.local_step,
